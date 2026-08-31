@@ -1,0 +1,6 @@
+DSH Project Atlas
+Copyright 2026 DSH Project Atlas contributors
+
+This distribution includes a project-neutral semantic graph core and a fully
+synthetic Orchid Commerce fixture. Private adapters, production facts,
+credentials, and customer data are deliberately excluded.

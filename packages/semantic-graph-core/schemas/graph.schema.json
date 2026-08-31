@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/semantic-graph/graph.schema.json",
+  "title": "Semantic graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "namespace", "build", "nodes", "edges", "unknowns", "diagnostics"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "namespace": { "type": "string", "minLength": 1 },
+    "build": { "type": "object" },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "unknowns": { "type": "array", "items": { "type": "object" } },
+    "diagnostics": { "type": "array", "items": { "type": "object" } }
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["id", "namespace", "kind", "key", "label", "properties", "confidence", "verification", "provenance"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^urn:semantic-graph:v1:node:" },
+        "namespace": { "type": "string" },
+        "kind": { "type": "string" },
+        "key": {},
+        "label": { "type": "string" },
+        "properties": { "type": "object" },
+        "confidence": {},
+        "verification": { "type": "string" },
+        "provenance": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "namespace", "relation", "from", "to", "key", "properties", "confidence", "verification", "provenance"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^urn:semantic-graph:v1:edge:" },
+        "namespace": { "type": "string" },
+        "relation": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "key": {},
+        "properties": { "type": "object" },
+        "confidence": {},
+        "verification": { "type": "string" },
+        "provenance": { "type": "array", "items": { "type": "object" } }
+      }
+    }
+  }
+}

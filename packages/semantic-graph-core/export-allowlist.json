@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "1.0.0",
+  "hashAlgorithm": "SHA-256",
+  "defaultPolicy": "deny",
+  "entries": [
+    {
+      "path": ".gitattributes",
+      "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
+      "hashMode": "bytes",
+      "role": "line-ending-policy",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "sha256": "afa06c6023986afc180675b76c0f79e6a9d7e89f7df7ec80e5794342a548564d",
+      "hashMode": "bytes",
+      "role": "architecture",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "f24362b8e3e2e334f0420882cd7df18f5ea9fd2b32015f314b21dfa3cbac1d31",
+      "hashMode": "bytes",
+      "role": "license",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "README.md",
+      "sha256": "191f10ebaa12ed090c3e771ead1e8ddd7c4f7af29d21e78752d1af14c7bfd323",
+      "hashMode": "bytes",
+      "role": "documentation",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "376619e22ebc427f28140a84180e0d6a903245b2867a6adecb851ff7bafd3ea2",
+      "hashMode": "bytes",
+      "role": "license-notices",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "bin/semantic-graph.mjs",
+      "sha256": "8fbf1287af0ce4ec38ffda266f3a87ace1d847bb86f6360340b3b239ebd3ff6b",
+      "hashMode": "bytes",
+      "role": "cli",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "export-allowlist.json",
+      "sha256": "c4373fc6f41f2c0923fbc395cc51414c645b8d7e45fef9c43c448fa9451ebb46",
+      "hashMode": "canonical-self-v1",
+      "role": "export-manifest",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "index.mjs",
+      "sha256": "b6a995c9b4b6426a16a6948a1b83c7dd585f43099e24cac4ed7b95da2c95c5d5",
+      "hashMode": "bytes",
+      "role": "public-api",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "d54e18c5b8c4eca1dd21d88af613f34da7e803481c2ed449fd80e2c19e338a05",
+      "hashMode": "bytes",
+      "role": "exact-lock",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "package.json",
+      "sha256": "ac59a137ff1ac608948e80936732f1b40a12e058972fa09e0dc714093941f9db",
+      "hashMode": "bytes",
+      "role": "package-manifest",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "schemas/export-allowlist.schema.json",
+      "sha256": "33198f6e987e6a826286d533da7a177d92b5d65aeefe43fd91f797d782d17642",
+      "hashMode": "bytes",
+      "role": "schema",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "schemas/graph.schema.json",
+      "sha256": "ce401ef76f0922557caf2f02ce17d639fa03ac99c9e01e14cefd890f0f0202d2",
+      "hashMode": "bytes",
+      "role": "schema",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "schemas/source-manifest.schema.json",
+      "sha256": "93baa9528e47c09d2334baa50d265f423f3e69c7fb65c20b0bef1eab20ddb51c",
+      "hashMode": "bytes",
+      "role": "schema",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "src/analyzers.mjs",
+      "sha256": "6f8f334168fbb8fbb5d48c1162c0a7bbda63d50082f7f627904d4f764d00991d",
+      "hashMode": "bytes",
+      "role": "analyzers",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "src/canonical.mjs",
+      "sha256": "d9df489a06e5cf793fab50d800d166bb479ad0bd67db5003f401df01e42c4250",
+      "hashMode": "bytes",
+      "role": "canonicalization",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "src/graph.mjs",
+      "sha256": "b902490d3160473ae626a472bcce2977f9fdbc59c7bbc3cfa9808944454e1468",
+      "hashMode": "bytes",
+      "role": "graph-engine",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/core.test.mjs",
+      "sha256": "d9e718d694f87f5d22ca4f4d0a39897516aeed307a21b2eb260559e2c5f216e5",
+      "hashMode": "bytes",
+      "role": "tests",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/fixtures/orchid/config/services.yaml",
+      "sha256": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+      "hashMode": "bytes",
+      "role": "synthetic-fixture",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/fixtures/orchid/manifest.json",
+      "sha256": "77e54bd3bf2ced57f6c018dffc863454cbe2c029f1c24ba359e1ba97cc7407a6",
+      "hashMode": "bytes",
+      "role": "synthetic-fixture-manifest",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/fixtures/orchid/service/api.py",
+      "sha256": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+      "hashMode": "bytes",
+      "role": "synthetic-fixture",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/fixtures/orchid/storage/schema.sql.txt",
+      "sha256": "db62525c9cd41f03ff928b0a02282a1077b96669279c28db905d95236b464101",
+      "hashMode": "bytes",
+      "role": "synthetic-fixture",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/fixtures/orchid/ui/App.jsx",
+      "sha256": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+      "hashMode": "bytes",
+      "role": "synthetic-fixture",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "test/fixtures/orchid/worker/Program.cs",
+      "sha256": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+      "hashMode": "bytes",
+      "role": "synthetic-fixture",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "tools/core-gate.mjs",
+      "sha256": "1460d71620afe5623b494d0dc79551858955c87b4b8682057ad24acba1eb7dd5",
+      "hashMode": "bytes",
+      "role": "verification-tool",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "tools/export-core.mjs",
+      "sha256": "802a99a72162dfbd65fdf23a6ce83007b4a4fa26a9525d0431ad440a797e940c",
+      "hashMode": "bytes",
+      "role": "export-tool",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "tools/manifest-lib.mjs",
+      "sha256": "43596ea92c48ad68c04daecb263078b7a3a98c9fee8b56e845ffa13eb5c38509",
+      "hashMode": "bytes",
+      "role": "export-library",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "tools/rehash-allowlist.mjs",
+      "sha256": "608c38a739305c5fb12258948747c7beb110fa579b4a1ca8637c80f800e26664",
+      "hashMode": "bytes",
+      "role": "manifest-maintenance",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "tools/run-linux-rehearsal.mjs",
+      "sha256": "72f9d66c8559ac7c7069d40fca0a97410860491d4b24acd7c8d2ffc4c3b7f0ff",
+      "hashMode": "bytes",
+      "role": "cross-platform-rehearsal",
+      "license": "Apache-2.0"
+    }
+  ]
+}

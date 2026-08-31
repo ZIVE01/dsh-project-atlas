@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/semantic-graph/source-manifest.schema.json",
+  "title": "Explicit source manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["namespace", "files"],
+  "properties": {
+    "namespace": { "type": "string", "minLength": 1 },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "language": { "enum": ["javascript", "python", "csharp", "sql", "config"] },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}

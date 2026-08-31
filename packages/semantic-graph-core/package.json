@@ -1,0 +1,23 @@
+{
+  "name": "portable-semantic-graph-core",
+  "version": "0.1.0",
+  "description": "Dependency-free semantic graph construction and analysis core",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "bin": {
+    "semantic-graph": "./bin/semantic-graph.mjs"
+  },
+  "scripts": {
+    "check": "node --check ./index.mjs && node --check ./bin/semantic-graph.mjs && node ./tools/core-gate.mjs",
+    "test": "node --test ./test/*.test.mjs",
+    "export": "node ./tools/export-core.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

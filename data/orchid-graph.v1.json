@@ -1,0 +1,1004 @@
+{
+  "artifactVersion": "1.0.0",
+  "source": "packages/semantic-graph-core/test/fixtures/orchid/manifest.json",
+  "graphSha256": "3595d0fa21d714d4bc7273ee09bd52fe2ce86d5690857a788b64b6736b775878",
+  "graph": {
+    "build": {
+      "analyzerSet": [
+        "config",
+        "csharp",
+        "javascript",
+        "python",
+        "sql"
+      ],
+      "inputDigest": "62007b8d2bd67d1cc123204bcb5fe1c4ada9a867027848be14b9b4f7b2fa03ba"
+    },
+    "diagnostics": [],
+    "edges": [
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:7eff3efbc5142adfd24b9ffc481ed42fe4411aa7a4d492cd159fa10818b21bf8",
+        "id": "urn:semantic-graph:v1:edge:declares:14b1cad54c97ff6a49c290435b07654e929382aba239d2e635e45c088f599cc2",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 2,
+            "method": "javascript:DECLARES",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:function:f4dc2ad8242095fb582f641086a3f7c320d5b2339ec4091aa72b5ea871102748",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:e1d4d7c0a5b59b8d6adaa5d7ddd1752e154c077d7a61c1c5f4cdd14bd106cff7",
+        "id": "urn:semantic-graph:v1:edge:declares:1d73e52f27d36aeeae2f04315b6d86c72d386551a844cf7bf6f3a7d97756713a",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 5,
+            "method": "python:DECLARES",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:endpoint:77bf3aab1720d022f9d851c0bf3849174936d1f8cdb8c00827c0663150d84b25",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:e1d4d7c0a5b59b8d6adaa5d7ddd1752e154c077d7a61c1c5f4cdd14bd106cff7",
+        "id": "urn:semantic-graph:v1:edge:declares:290c6c16946e5481f0d9d4e8f22deb4717b22e5842e36eb16c1d712cd613758a",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 6,
+            "method": "python:DECLARES",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:function:be5e4aae86b84d1c265983e66afa8eae01ae652754c0d535f1c8361dc33b3fcd",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:9d89d47d6c1f96bf62a93782523d590bf83287383594146c33d8484c5a192032",
+        "id": "urn:semantic-graph:v1:edge:declares:34bcb86a28a16dffe00e90280c66c397a78285d9262ca44a754565417d7a7b6c",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 1,
+            "method": "csharp:DECLARES",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:type:778fc0090b34336b6d99a8569e65d1820f49b9eed5f6f8e7d4f8835ef5efd9cb",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:e1d4d7c0a5b59b8d6adaa5d7ddd1752e154c077d7a61c1c5f4cdd14bd106cff7",
+        "id": "urn:semantic-graph:v1:edge:declares:67a3301409a29b0f9453958f5e430454b016242c9478db99e2f8f627bbb1114d",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 9,
+            "method": "python:DECLARES",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:function:bd4f7aaa8a324d3a7099bb5aa6e9cbe8b7587a714b3f74da449a6ef0a59b4cd4",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:265ace02f8c0eb1c4251e90196cb343bbc2f78944abd60df1a52350dbfa4c8de",
+        "id": "urn:semantic-graph:v1:edge:declares:749692697c4541af3ea7831ec52b4fd8abac64b5b5873bfea836bcd5c34a70d6",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "db62525c9cd41f03ff928b0a02282a1077b96669279c28db905d95236b464101",
+            "line": 1,
+            "method": "sql:DECLARES",
+            "path": "storage/schema.sql.txt",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:table:d88dda7e47bb83bedca48a7f6f0981ad408f33e92889fac57fe8975a68d97311",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:config-file:1ee0cfb52492b939230a002dfcc5bf0f7171338bf730c7f7c8884a13fdb2f64b",
+        "id": "urn:semantic-graph:v1:edge:declares:81e0be8159d8ae4d8adc6dee779b9be71c64da96c66a9aa87e6bebbcc8336a09",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 1,
+            "method": "config:DECLARES",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:service:b1a675f08593ec8a38bb5f4e2801ce577d263ae1cdf0a3ea15b21035f8d072ef",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:9d89d47d6c1f96bf62a93782523d590bf83287383594146c33d8484c5a192032",
+        "id": "urn:semantic-graph:v1:edge:declares:b36b7ff5ac9bbaed6cf03622952851eed27c0f6e6fbd0dc1c7d8ceeee10dd3ba",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 2,
+            "method": "csharp:DECLARES",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:endpoint:77bf3aab1720d022f9d851c0bf3849174936d1f8cdb8c00827c0663150d84b25",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:config-file:1ee0cfb52492b939230a002dfcc5bf0f7171338bf730c7f7c8884a13fdb2f64b",
+        "id": "urn:semantic-graph:v1:edge:declares:b748f2dc726f3a5cf1a0a4a6968fddd1a2e3be69d977e2e400eab8cd936b6c20",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 3,
+            "method": "config:DECLARES",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:service:eb0c74a2678a1ba6db07628f1ff7fd7becd9965be59523a55d23142eb9e25f0e",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:config-file:1ee0cfb52492b939230a002dfcc5bf0f7171338bf730c7f7c8884a13fdb2f64b",
+        "id": "urn:semantic-graph:v1:edge:declares:cfc345233f8cce674e8fedbe71568bfed909da79c5b75ca33b48bb966661de11",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 2,
+            "method": "config:DECLARES",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:service:d8ce3b086130a1220f81a214557cc4ef3f971b5a7fe1bfd537e89acc93f0a25e",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:7eff3efbc5142adfd24b9ffc481ed42fe4411aa7a4d492cd159fa10818b21bf8",
+        "id": "urn:semantic-graph:v1:edge:declares:e56a397761d1d102331e7529a600cb6dcc0b95a0bbea595a4cac4703899e14a4",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 5,
+            "method": "javascript:DECLARES",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "relation": "DECLARES",
+        "to": "urn:semantic-graph:v1:node:function:a221d6302f777ad8204137ba7fab83b208ea15620a73c8c10cd7014d2d1b2311",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:e1d4d7c0a5b59b8d6adaa5d7ddd1752e154c077d7a61c1c5f4cdd14bd106cff7",
+        "id": "urn:semantic-graph:v1:edge:enqueues:71b3dbc8979ed0e8e5f26d098458e1a0696497486d4287c2529c2e661b82f8a9",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 10,
+            "method": "python:ENQUEUES",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "relation": "ENQUEUES",
+        "to": "urn:semantic-graph:v1:node:transport:cf25907ca419f4715196786f8bab9003f070184c34a8162b20d906b5211dc519",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:http-call:af42a5dab930d458826e1aa3cde87f23d4390e3b64e41893da21a3f2811e1aff",
+        "id": "urn:semantic-graph:v1:edge:http_calls:29974f9beb675aa8e669599e178aeab825136bda7a7985906f0e921b297b471a",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 3,
+            "method": "javascript:HTTP_CALLS",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "relation": "HTTP_CALLS",
+        "to": "urn:semantic-graph:v1:node:endpoint:1905fe4ecfafefe7926a042152cb41661f29fdf42b6d3ca32daa938dc76e226d",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:7eff3efbc5142adfd24b9ffc481ed42fe4411aa7a4d492cd159fa10818b21bf8",
+        "id": "urn:semantic-graph:v1:edge:imports:b120b20aefcfbd303350f18b8dbce571cfcd16c7202e1ed81443c6ac784cbbb2",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 1,
+            "method": "javascript:IMPORTS",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "relation": "IMPORTS",
+        "to": "urn:semantic-graph:v1:node:module:6a79e3f6c3bc40ab7af5ede581508a68e8aab8cf3844b81e91e3f82fd434509e",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:config-file:1ee0cfb52492b939230a002dfcc5bf0f7171338bf730c7f7c8884a13fdb2f64b",
+        "id": "urn:semantic-graph:v1:edge:proxies_to:f4abfbb5c66aa85f7e4ebc6f852e095a7849f3b82c027009e0ccf3d4b03c3019",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 5,
+            "method": "config:PROXIES_TO",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "relation": "PROXIES_TO",
+        "to": "urn:semantic-graph:v1:node:endpoint:e0e5cef8dd7899d1a1f65929986bcf881b83cba7ec17bb4c3092e75695cb2673",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:265ace02f8c0eb1c4251e90196cb343bbc2f78944abd60df1a52350dbfa4c8de",
+        "id": "urn:semantic-graph:v1:edge:reads:711b85d46ec03c604fd1856a8bb6c28e3222dbc043114762a3d39b9782949c50",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "db62525c9cd41f03ff928b0a02282a1077b96669279c28db905d95236b464101",
+            "line": 2,
+            "method": "sql:READS",
+            "path": "storage/schema.sql.txt",
+            "rootId": "source"
+          }
+        ],
+        "relation": "READS",
+        "to": "urn:semantic-graph:v1:node:table:d88dda7e47bb83bedca48a7f6f0981ad408f33e92889fac57fe8975a68d97311",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:9d89d47d6c1f96bf62a93782523d590bf83287383594146c33d8484c5a192032",
+        "id": "urn:semantic-graph:v1:edge:registers:332de06f585474d5fb0e56c541374daaae6d2fbe5f1bfb7a5a303b8349a4b854",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 3,
+            "method": "csharp:REGISTERS",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "relation": "REGISTERS",
+        "to": "urn:semantic-graph:v1:node:service:83a0fc7174fa6a189c0a36cfec36f38f2f6e087e14227af7e12890cee973eac7",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:ui-route:3373788043a1341e411dc1e15c5f9e37ec828dc8234cf913080c6cfccffaa9fe",
+        "id": "urn:semantic-graph:v1:edge:routes_to:e5badba0a01389519e9501a5a350ff1d05737ca1feef2baa79009e767a30c62e",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 8,
+            "method": "javascript:ROUTES_TO",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "relation": "ROUTES_TO",
+        "to": "urn:semantic-graph:v1:node:component:f96da62d266d65ef2f0d50869f6cac279ba4dbd69f5c284b164b622d15d1eeef",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:config-file:1ee0cfb52492b939230a002dfcc5bf0f7171338bf730c7f7c8884a13fdb2f64b",
+        "id": "urn:semantic-graph:v1:edge:uses_transport:024a3f376a8df93122ebe6bbe055e61da595e9a483ddda2dbbe84bd8943d178b",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 4,
+            "method": "config:USES_TRANSPORT",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "relation": "USES_TRANSPORT",
+        "to": "urn:semantic-graph:v1:node:transport:33bafc45d2a0b8434818ccf9a4528a05d58d8bfc609b62eca444b7dd3fa736fc",
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "from": "urn:semantic-graph:v1:node:source-file:265ace02f8c0eb1c4251e90196cb343bbc2f78944abd60df1a52350dbfa4c8de",
+        "id": "urn:semantic-graph:v1:edge:writes:1d864f276ecb1190a0e4ebf78fd1260a40129795eb167968333d09a6e5b2a388",
+        "key": {},
+        "namespace": "synthetic:orchid",
+        "properties": {},
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "db62525c9cd41f03ff928b0a02282a1077b96669279c28db905d95236b464101",
+            "line": 3,
+            "method": "sql:WRITES",
+            "path": "storage/schema.sql.txt",
+            "rootId": "source"
+          }
+        ],
+        "relation": "WRITES",
+        "to": "urn:semantic-graph:v1:node:table:d88dda7e47bb83bedca48a7f6f0981ad408f33e92889fac57fe8975a68d97311",
+        "verification": "source-confirmed"
+      }
+    ],
+    "namespace": "synthetic:orchid",
+    "nodes": [
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:component:f96da62d266d65ef2f0d50869f6cac279ba4dbd69f5c284b164b622d15d1eeef",
+        "key": "ui/App.jsx::OrchidBoard",
+        "kind": "component",
+        "label": "ui/App.jsx::OrchidBoard",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 8,
+            "method": "javascript:component",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:config-file:1ee0cfb52492b939230a002dfcc5bf0f7171338bf730c7f7c8884a13fdb2f64b",
+        "key": "config/services.yaml",
+        "kind": "config-file",
+        "label": "config/services.yaml",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "config",
+          "relativePath": "config/services.yaml"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 1,
+            "method": "config:config-file",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:endpoint:1905fe4ecfafefe7926a042152cb41661f29fdf42b6d3ca32daa938dc76e226d",
+        "key": "* /api/orchids",
+        "kind": "endpoint",
+        "label": "* /api/orchids",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 3,
+            "method": "javascript:endpoint",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:endpoint:77bf3aab1720d022f9d851c0bf3849174936d1f8cdb8c00827c0663150d84b25",
+        "key": "GET /orchids",
+        "kind": "endpoint",
+        "label": "GET /orchids",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "csharp",
+          "relativePath": "worker/Program.cs"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 2,
+            "method": "csharp:endpoint",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:endpoint:e0e5cef8dd7899d1a1f65929986bcf881b83cba7ec17bb4c3092e75695cb2673",
+        "key": "http://api:8080",
+        "kind": "endpoint",
+        "label": "http://api:8080",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "config",
+          "relativePath": "config/services.yaml"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 5,
+            "method": "config:endpoint",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:function:a221d6302f777ad8204137ba7fab83b208ea15620a73c8c10cd7014d2d1b2311",
+        "key": "ui/App.jsx::DynamicBoard",
+        "kind": "function",
+        "label": "ui/App.jsx::DynamicBoard",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 5,
+            "method": "javascript:function",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:function:bd4f7aaa8a324d3a7099bb5aa6e9cbe8b7587a714b3f74da449a6ef0a59b4cd4",
+        "key": "service/api.py::enqueue_refresh",
+        "kind": "function",
+        "label": "service/api.py::enqueue_refresh",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "python",
+          "relativePath": "service/api.py"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 9,
+            "method": "python:function",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:function:be5e4aae86b84d1c265983e66afa8eae01ae652754c0d535f1c8361dc33b3fcd",
+        "key": "service/api.py::list_orchids",
+        "kind": "function",
+        "label": "service/api.py::list_orchids",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "python",
+          "relativePath": "service/api.py"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 6,
+            "method": "python:function",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:function:f4dc2ad8242095fb582f641086a3f7c320d5b2339ec4091aa72b5ea871102748",
+        "key": "ui/App.jsx::OrchidBoard",
+        "kind": "function",
+        "label": "ui/App.jsx::OrchidBoard",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 2,
+            "method": "javascript:function",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:http-call:af42a5dab930d458826e1aa3cde87f23d4390e3b64e41893da21a3f2811e1aff",
+        "key": "ui/App.jsx::fetch(/api/orchids)",
+        "kind": "http-call",
+        "label": "ui/App.jsx::fetch(/api/orchids)",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 3,
+            "method": "javascript:http-call",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:module:6a79e3f6c3bc40ab7af5ede581508a68e8aab8cf3844b81e91e3f82fd434509e",
+        "key": "./client.js",
+        "kind": "module",
+        "label": "./client.js",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 1,
+            "method": "javascript:module",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:service:83a0fc7174fa6a189c0a36cfec36f38f2f6e087e14227af7e12890cee973eac7",
+        "key": "OrchidRepository",
+        "kind": "service",
+        "label": "OrchidRepository",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "csharp",
+          "relativePath": "worker/Program.cs"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 3,
+            "method": "csharp:service",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:service:b1a675f08593ec8a38bb5f4e2801ce577d263ae1cdf0a3ea15b21035f8d072ef",
+        "key": "services",
+        "kind": "service",
+        "label": "services",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "config",
+          "relativePath": "config/services.yaml"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 1,
+            "method": "config:service",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:service:d8ce3b086130a1220f81a214557cc4ef3f971b5a7fe1bfd537e89acc93f0a25e",
+        "key": "api",
+        "kind": "service",
+        "label": "api",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "config",
+          "relativePath": "config/services.yaml"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 2,
+            "method": "config:service",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:service:eb0c74a2678a1ba6db07628f1ff7fd7becd9965be59523a55d23142eb9e25f0e",
+        "key": "worker",
+        "kind": "service",
+        "label": "worker",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "config",
+          "relativePath": "config/services.yaml"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 3,
+            "method": "config:service",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:source-file:265ace02f8c0eb1c4251e90196cb343bbc2f78944abd60df1a52350dbfa4c8de",
+        "key": "storage/schema.sql.txt",
+        "kind": "source-file",
+        "label": "storage/schema.sql.txt",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "sql",
+          "relativePath": "storage/schema.sql.txt"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "db62525c9cd41f03ff928b0a02282a1077b96669279c28db905d95236b464101",
+            "line": 1,
+            "method": "sql:source-file",
+            "path": "storage/schema.sql.txt",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:source-file:7eff3efbc5142adfd24b9ffc481ed42fe4411aa7a4d492cd159fa10818b21bf8",
+        "key": "ui/App.jsx",
+        "kind": "source-file",
+        "label": "ui/App.jsx",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 1,
+            "method": "javascript:source-file",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:source-file:9d89d47d6c1f96bf62a93782523d590bf83287383594146c33d8484c5a192032",
+        "key": "worker/Program.cs",
+        "kind": "source-file",
+        "label": "worker/Program.cs",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "csharp",
+          "relativePath": "worker/Program.cs"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 1,
+            "method": "csharp:source-file",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:source-file:e1d4d7c0a5b59b8d6adaa5d7ddd1752e154c077d7a61c1c5f4cdd14bd106cff7",
+        "key": "service/api.py",
+        "kind": "source-file",
+        "label": "service/api.py",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "python",
+          "relativePath": "service/api.py"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 1,
+            "method": "python:source-file",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:table:d88dda7e47bb83bedca48a7f6f0981ad408f33e92889fac57fe8975a68d97311",
+        "key": "garden.orchids",
+        "kind": "table",
+        "label": "garden.orchids",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "sql",
+          "relativePath": "storage/schema.sql.txt"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "db62525c9cd41f03ff928b0a02282a1077b96669279c28db905d95236b464101",
+            "line": 3,
+            "method": "sql:table",
+            "path": "storage/schema.sql.txt",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:transport:33bafc45d2a0b8434818ccf9a4528a05d58d8bfc609b62eca444b7dd3fa736fc",
+        "key": "redis",
+        "kind": "transport",
+        "label": "redis",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "config",
+          "relativePath": "config/services.yaml"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "ad0f207640db8368074cc94fab35a3c9c5bdbf34f2832bfa5fca196485f78708",
+            "line": 4,
+            "method": "config:transport",
+            "path": "config/services.yaml",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:transport:cf25907ca419f4715196786f8bab9003f070184c34a8162b20d906b5211dc519",
+        "key": "task-queue",
+        "kind": "transport",
+        "label": "task-queue",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "python",
+          "relativePath": "service/api.py"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "5e6176c55071f81a7b7fbaac89935207be3283896665d91162c82993034d82aa",
+            "line": 10,
+            "method": "python:transport",
+            "path": "service/api.py",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:type:778fc0090b34336b6d99a8569e65d1820f49b9eed5f6f8e7d4f8835ef5efd9cb",
+        "key": "worker/Program.cs::OrchidRepository",
+        "kind": "type",
+        "label": "worker/Program.cs::OrchidRepository",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "csharp",
+          "relativePath": "worker/Program.cs"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "4bd358d3a06ab296dcfdfe76227f1020ec4f840eb71fba52f8ab1cbdc73faeb2",
+            "line": 1,
+            "method": "csharp:type",
+            "path": "worker/Program.cs",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      },
+      {
+        "confidence": "confirmed",
+        "id": "urn:semantic-graph:v1:node:ui-route:3373788043a1341e411dc1e15c5f9e37ec828dc8234cf913080c6cfccffaa9fe",
+        "key": "ui/App.jsx::route(/orchids)",
+        "kind": "ui-route",
+        "label": "ui/App.jsx::route(/orchids)",
+        "namespace": "synthetic:orchid",
+        "properties": {
+          "language": "javascript",
+          "relativePath": "ui/App.jsx"
+        },
+        "provenance": [
+          {
+            "confidence": "confirmed",
+            "contentHash": "a13280e75dc4e3ca696d27a8416a03c0d0606205810c4a75c60d6d1d3ed8985e",
+            "line": 8,
+            "method": "javascript:ui-route",
+            "path": "ui/App.jsx",
+            "rootId": "source"
+          }
+        ],
+        "verification": "source-confirmed"
+      }
+    ],
+    "schemaVersion": "1.0.0",
+    "unknowns": [
+      {
+        "family": "javascript",
+        "path": "ui/App.jsx",
+        "reason": "dynamic request target",
+        "status": "ambiguous"
+      }
+    ]
+  }
+}

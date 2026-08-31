@@ -1,0 +1,10 @@
+{
+  "namespace": "synthetic:orchid",
+  "files": [
+    { "path": "ui/App.jsx", "language": "javascript" },
+    { "path": "service/api.py", "language": "python" },
+    { "path": "worker/Program.cs", "language": "csharp" },
+    { "path": "storage/schema.sql.txt", "language": "sql" },
+    { "path": "config/services.yaml", "language": "config" }
+  ]
+}

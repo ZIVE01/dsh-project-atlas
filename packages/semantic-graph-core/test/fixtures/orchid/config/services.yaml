@@ -1,0 +1,5 @@
+services:
+  api:
+  worker:
+broker_url: redis
+proxy_pass http://api:8080;
