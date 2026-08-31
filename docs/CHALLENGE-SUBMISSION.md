@@ -40,7 +40,7 @@ such in the README and Git history.
 
 ## Links to complete before submission
 
-- Live demo: `TBD`
+- Live demo: `https://dsh-project-atlas.dr-satim.chatgpt.site`
 - Public source repository: `TBD`
 - Video under three minutes: `TBD`
 - Challenge submission page: `TBD`

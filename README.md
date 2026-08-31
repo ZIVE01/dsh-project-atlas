@@ -7,6 +7,8 @@ Challenge. A person and an AI agent can inspect the same semantic graph, focus
 the same entity, trace a source-backed path, and review uncertainty without
 giving the agent database, shell, deployment, or mutation access.
 
+[Open the deployed demo](https://dsh-project-atlas.dr-satim.chatgpt.site)
+
 The live page uses a fully synthetic project named **Orchid Commerce**. No
 customer, employee, production, or private-project data is included.
 

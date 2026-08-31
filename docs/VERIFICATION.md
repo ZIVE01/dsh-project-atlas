@@ -7,7 +7,7 @@ Verification date: 2026-08-31.
 - `npm audit --json`: 0 known vulnerabilities.
 - ESLint: PASS with 0 warnings and 0 errors.
 - WebMCP and fixture-integrity tests: 4/4 PASS.
-- Public-boundary scan: PASS across 51 text files.
+- Public-boundary scan: PASS across 52 text files.
 - Vinext/Vite production build: PASS.
 - Local preview: HTTP 200.
 
