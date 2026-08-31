@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import fixtureArtifact from '@/data/orchid-graph.v1.json';
 
 type ViewMode = 'Architecture' | 'Now' | 'Deviations' | 'History';
@@ -35,6 +35,29 @@ type Finding = {
   nodeId: string;
   state: 'UNKNOWN' | 'BLIND SPOT' | 'REVIEW';
 };
+
+type AgentDecision = 'allow-context' | 'deny' | 'unknown' | 'review';
+
+type AgentEvent = {
+  id: number;
+  toolName: string;
+  decision: AgentDecision;
+  summary: string;
+};
+
+type ConsoleState =
+  | { kind: 'overview' }
+  | { kind: 'focus'; entityId: string }
+  | { kind: 'path'; entities: string[]; relations: GraphEdge[] }
+  | { kind: 'finding'; finding: Finding }
+  | { kind: 'comparison'; scope: string }
+  | {
+      kind: 'deny';
+      requestedId: string;
+      reason: string;
+      selectedBefore: string;
+      selectedAfter: string;
+    };
 
 type WebMcpTool = {
   name: string;
@@ -201,6 +224,8 @@ const modeCopy: Record<ViewMode, { eyebrow: string; title: string }> = {
   History: { eyebrow: 'IMMUTABLE TIMELINE', title: 'How the architecture changed' },
 };
 
+const DEMO_STEP_MS = 4000;
+
 function stateLabel(state: NodeState) {
   if (state === 'blind-spot') return 'BLIND SPOT';
   return state.toUpperCase();
@@ -236,6 +261,14 @@ function findGraphPath(fromEntityId: string, toEntityId: string) {
   return null;
 }
 
+function graphEdgeKey(edge: GraphEdge) {
+  return `${edge.from}->${edge.to}`;
+}
+
+function waitForDemo(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
 export default function Home() {
   const [mode, setMode] = useState<ViewMode>('Architecture');
   const [selectedId, setSelectedId] = useState(nodes[4].id);
@@ -243,6 +276,15 @@ export default function Home() {
   const [activeLayer, setActiveLayer] = useState<GraphNode['layer'] | 'All'>('All');
   const [toolState, setToolState] = useState<'connected' | 'preview'>('preview');
   const [lastAction, setLastAction] = useState('Human selected Lookup handler');
+  const [highlightedNodeIds, setHighlightedNodeIds] = useState<string[]>([]);
+  const [highlightedEdgeIds, setHighlightedEdgeIds] = useState<string[]>([]);
+  const [consoleState, setConsoleState] = useState<ConsoleState>({ kind: 'overview' });
+  const [agentEvents, setAgentEvents] = useState<AgentEvent[]>([]);
+  const [demoRunning, setDemoRunning] = useState(false);
+  const [demoStep, setDemoStep] = useState('READY');
+  const selectedIdRef = useRef(selectedId);
+  const eventSequence = useRef(0);
+  const demoRun = useRef(0);
 
   const selected = nodes.find((node) => node.id === selectedId) ?? nodes[0];
   const matchingNodes = useMemo(() => {
@@ -255,13 +297,217 @@ export default function Home() {
     );
   }, [activeLayer, query]);
 
+  function setSelectedNode(nodeId: string) {
+    selectedIdRef.current = nodeId;
+    setSelectedId(nodeId);
+  }
+
+  function recordAgentEvent(toolName: string, decision: AgentDecision, summary: string) {
+    eventSequence.current += 1;
+    const event: AgentEvent = { id: eventSequence.current, toolName, decision, summary };
+    setAgentEvents((current) => [...current, event].slice(-5));
+  }
+
   function focusNode(nodeId: string, source = 'Human') {
     const node = nodes.find((candidate) => candidate.id === nodeId);
     if (!node) return false;
-    setSelectedId(node.id);
+    setSelectedNode(node.id);
+    setHighlightedNodeIds([node.id]);
+    setHighlightedEdgeIds([]);
+    setConsoleState({ kind: 'focus', entityId: node.id });
     setLastAction(`${source} focused ${node.label}`);
     return true;
   }
+
+  function inspectProjectOverview() {
+    const payload = {
+      projectId: 'prj_orchid_synthetic',
+      namespace: 'synthetic:orchid',
+      engineGraphNodes: fixtureArtifact.graph.nodes.length,
+      engineGraphEdges: fixtureArtifact.graph.edges.length,
+      engineUnknowns: fixtureArtifact.graph.unknowns.length,
+      visibleProjectionNodes: nodes.length,
+      visibleProjectionEdges: edges.length,
+      visibleProjectionSource: 'synthetic-architectural-overlay-v1',
+      findings: findings.length,
+      integrity: 'PASS',
+      graphSha256: fixtureArtifact.graphSha256,
+      scope: 'synthetic-read-only',
+    };
+    setConsoleState({ kind: 'overview' });
+    setHighlightedNodeIds([]);
+    setHighlightedEdgeIds([]);
+    setLastAction('Agent inspected the project overview');
+    recordAgentEvent('inspect_project_overview', 'allow-context', 'Pinned graph identity and integrity verified');
+    return payload;
+  }
+
+  function focusExactEntity(entityId: string) {
+    const selectedBefore = selectedIdRef.current;
+    const node = nodes.find((candidate) => candidate.id === entityId);
+    if (!node) {
+      setConsoleState({
+        kind: 'deny',
+        requestedId: entityId,
+        reason: 'unknown-exact-entity-id',
+        selectedBefore,
+        selectedAfter: selectedIdRef.current,
+      });
+      setLastAction(`Agent request denied for ${entityId}; selection unchanged`);
+      recordAgentEvent('focus_graph_entity', 'deny', `${entityId} rejected; selection unchanged`);
+      return { decision: 'deny', reason: 'unknown-exact-entity-id', mutation: false };
+    }
+    setSelectedNode(node.id);
+    setHighlightedNodeIds([node.id]);
+    setHighlightedEdgeIds([]);
+    setConsoleState({ kind: 'focus', entityId: node.id });
+    setLastAction(`Agent focused ${node.label}`);
+    recordAgentEvent('focus_graph_entity', 'allow-context', `Focused exact entity ${node.id}`);
+    return { decision: 'allow-context', focusedEntityId: node.id, mutation: false };
+  }
+
+  function traceArchitecturePath(fromEntityId: string, toEntityId: string) {
+    const from = fromEntityId;
+    const to = toEntityId;
+    const exactNodeIds = nodes.map((node) => node.id);
+    if (!exactNodeIds.includes(from) || !exactNodeIds.includes(to)) {
+      recordAgentEvent('trace_architecture_path', 'deny', 'Unknown exact entity ID rejected');
+      return { decision: 'deny', reason: 'unknown-exact-entity-id' };
+    }
+    const path = findGraphPath(from, to);
+    if (!path) {
+      recordAgentEvent('trace_architecture_path', 'unknown', 'No forward source-backed path exists');
+      return { decision: 'unknown', reason: 'no-forward-source-backed-path' };
+    }
+    setSelectedNode(to);
+    setHighlightedNodeIds(path.entities);
+    setHighlightedEdgeIds(path.relations.map(graphEdgeKey));
+    setConsoleState({ kind: 'path', entities: path.entities, relations: path.relations });
+    setLastAction(`Agent traced ${path.entities.length} exact entities`);
+    recordAgentEvent(
+      'trace_architecture_path',
+      'allow-context',
+      `${path.entities.length} entities · ${path.relations.length} relations · 1 needs proof`,
+    );
+    return {
+      decision: 'allow-context',
+      entities: path.entities,
+      relations: path.relations,
+      bounded: true,
+      mutation: false,
+    };
+  }
+
+  function listSecurityFindings(severity: string) {
+    const result = findings.filter((finding) => severity === 'all' || finding.severity === severity);
+    setMode('Deviations');
+    if (result[0]) {
+      setSelectedNode(result[0].nodeId);
+      setHighlightedNodeIds(result.map((finding) => finding.nodeId));
+      setHighlightedEdgeIds([]);
+      setConsoleState({ kind: 'finding', finding: result[0] });
+    }
+    setLastAction(`Agent listed ${result.length} preserved findings`);
+    recordAgentEvent('list_security_findings', result[0]?.state === 'UNKNOWN' ? 'unknown' : 'review', `${result.length} findings preserved`);
+    return { projectId: 'prj_orchid_synthetic', findings: result, mutation: false };
+  }
+
+  function compareArchitectureLayers(scope: string) {
+    setMode('Deviations');
+    setHighlightedNodeIds(findings.map((finding) => finding.nodeId));
+    setHighlightedEdgeIds([]);
+    setConsoleState({ kind: 'comparison', scope });
+    setLastAction(`Agent compared ${scope} layers`);
+    recordAgentEvent('compare_architecture_layers', 'review', 'UNKNOWN, BLIND SPOT and REVIEW preserved');
+    return {
+      decision: 'allow-context',
+      expectedSnapshot: 'snp_expected_004',
+      observedWindow: 'win_observed_018',
+      deviations: findings.map(({ id, state, title, nodeId }) => ({ id, state, title, nodeId })),
+      unknownsPreserved: true,
+      mutation: false,
+    };
+  }
+
+  async function runFullDemo() {
+    if (demoRunning) return;
+    const runId = demoRun.current + 1;
+    demoRun.current = runId;
+    setDemoRunning(true);
+    setAgentEvents([]);
+
+    const continueDemo = () => demoRun.current === runId;
+    const pause = async () => {
+      await waitForDemo(DEMO_STEP_MS);
+      return continueDemo();
+    };
+
+    setDemoStep('1 / 9 · OVERVIEW');
+    inspectProjectOverview();
+    if (!(await pause())) return;
+
+    setDemoStep('2 / 9 · EXACT ENTITY');
+    focusExactEntity('screen:project-search');
+    if (!(await pause())) return;
+
+    setDemoStep('3 / 9 · BOUNDED PATH');
+    const traced = traceArchitecturePath('screen:project-search', 'store:catalog');
+    if ('entities' in traced) {
+      for (const entityId of traced.entities) {
+        if (!continueDemo()) return;
+        setSelectedNode(entityId);
+        await waitForDemo(520);
+      }
+    }
+    if (!(await pause())) return;
+
+    setDemoStep('4 / 9 · HIGH FINDING');
+    listSecurityFindings('high');
+    if (!(await pause())) return;
+
+    setDemoStep('5 / 9 · SERVER PROOF');
+    focusExactEntity('handler:lookup');
+    if (!(await pause())) return;
+
+    setDemoStep('6 / 9 · EXPECTED VS OBSERVED');
+    compareArchitectureLayers('all');
+    if (!(await pause())) return;
+
+    setDemoStep('7 / 9 · BLIND SPOT');
+    focusExactEntity('telemetry:window');
+    if (!(await pause())) return;
+
+    setDemoStep('8 / 9 · FAIL CLOSED');
+    focusExactEntity('handler:payment');
+    if (!(await pause())) return;
+
+    setDemoStep('9 / 9 · FINAL EVIDENCE');
+    focusExactEntity('handler:lookup');
+    setDemoStep('DEMO COMPLETE · READ ONLY');
+    setDemoRunning(false);
+  }
+
+  const toolExecutors = useRef({
+    inspectProjectOverview,
+    focusExactEntity,
+    traceArchitecturePath,
+    listSecurityFindings,
+    compareArchitectureLayers,
+  });
+
+  useEffect(() => {
+    toolExecutors.current = {
+      inspectProjectOverview,
+      focusExactEntity,
+      traceArchitecturePath,
+      listSecurityFindings,
+      compareArchitectureLayers,
+    };
+  });
+
+  useEffect(() => () => {
+    demoRun.current += 1;
+  }, []);
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: ModelContext }).modelContext;
@@ -276,23 +522,7 @@ export default function Home() {
         description:
           'Return the pinned identity, graph coverage and safety state of the currently visible synthetic project. This tool is read-only.',
         inputSchema: { type: 'object', properties: {}, additionalProperties: false },
-        execute: () => {
-          setLastAction('Agent inspected the project overview');
-          return toolResult({
-            projectId: 'prj_orchid_synthetic',
-            namespace: 'synthetic:orchid',
-            engineGraphNodes: fixtureArtifact.graph.nodes.length,
-            engineGraphEdges: fixtureArtifact.graph.edges.length,
-            engineUnknowns: fixtureArtifact.graph.unknowns.length,
-            visibleProjectionNodes: nodes.length,
-            visibleProjectionEdges: edges.length,
-            visibleProjectionSource: 'synthetic-architectural-overlay-v1',
-            findings: findings.length,
-            integrity: 'PASS',
-            graphSha256: fixtureArtifact.graphSha256,
-            scope: 'synthetic-read-only',
-          });
-        },
+        execute: () => toolResult(toolExecutors.current.inspectProjectOverview()),
       },
       {
         name: 'focus_graph_entity',
@@ -308,12 +538,7 @@ export default function Home() {
         },
         execute: ({ entityId }) => {
           const id = typeof entityId === 'string' ? entityId : '';
-          const focused = focusNode(id, 'Agent');
-          return toolResult(
-            focused
-              ? { decision: 'allow-context', focusedEntityId: id, mutation: false }
-              : { decision: 'deny', reason: 'unknown-exact-entity-id', mutation: false },
-          );
+          return toolResult(toolExecutors.current.focusExactEntity(id));
         },
       },
       {
@@ -332,22 +557,7 @@ export default function Home() {
         execute: ({ fromEntityId, toEntityId }) => {
           const from = typeof fromEntityId === 'string' ? fromEntityId : '';
           const to = typeof toEntityId === 'string' ? toEntityId : '';
-          if (!exactNodeIds.includes(from) || !exactNodeIds.includes(to)) {
-            return toolResult({ decision: 'deny', reason: 'unknown-exact-entity-id' });
-          }
-          const path = findGraphPath(from, to);
-          if (!path) {
-            return toolResult({ decision: 'unknown', reason: 'no-forward-source-backed-path' });
-          }
-          focusNode(to, 'Agent');
-          setLastAction(`Agent traced ${path.entities.length} exact entities`);
-          return toolResult({
-            decision: 'allow-context',
-            entities: path.entities,
-            relations: path.relations,
-            bounded: true,
-            mutation: false,
-          });
+          return toolResult(toolExecutors.current.traceArchitecturePath(from, to));
         },
       },
       {
@@ -363,13 +573,7 @@ export default function Home() {
         },
         execute: ({ severity }) => {
           const selectedSeverity = typeof severity === 'string' ? severity : 'all';
-          const result = findings.filter(
-            (finding) => selectedSeverity === 'all' || finding.severity === selectedSeverity,
-          );
-          setMode('Deviations');
-          if (result[0]) focusNode(result[0].nodeId, 'Agent');
-          setLastAction(`Agent listed ${result.length} preserved findings`);
-          return toolResult({ projectId: 'prj_orchid_synthetic', findings: result, mutation: false });
+          return toolResult(toolExecutors.current.listSecurityFindings(selectedSeverity));
         },
       },
       {
@@ -384,16 +588,7 @@ export default function Home() {
           additionalProperties: false,
         },
         execute: ({ scope }) => {
-          setMode('Deviations');
-          setLastAction(`Agent compared ${String(scope ?? 'all')} layers`);
-          return toolResult({
-            decision: 'allow-context',
-            expectedSnapshot: 'snp_expected_004',
-            observedWindow: 'win_observed_018',
-            deviations: findings.map(({ id, state, title, nodeId }) => ({ id, state, title, nodeId })),
-            unknownsPreserved: true,
-            mutation: false,
-          });
+          return toolResult(toolExecutors.current.compareArchitectureLayers(String(scope ?? 'all')));
         },
       },
     ];
@@ -406,7 +601,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="app-shell">
+    <main className="app-shell" data-mode={mode}>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="DSH Project Atlas home">
           <span className="brand-mark" aria-hidden="true">D</span>
@@ -548,7 +743,7 @@ export default function Home() {
               const height = horizontal ? 2 : Math.abs(to.y - from.y) - 7;
               return (
                 <span
-                  className={`graph-edge ${edge.state} ${horizontal ? 'horizontal' : 'vertical'}`}
+                  className={`graph-edge ${edge.state} ${horizontal ? 'horizontal' : 'vertical'} ${highlightedEdgeIds.includes(graphEdgeKey(edge)) ? 'active-path' : ''}`}
                   key={`${edge.from}-${edge.to}`}
                   style={{ left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` }}
                   title={edge.label}
@@ -564,7 +759,7 @@ export default function Home() {
               return (
                 <button
                   key={node.id}
-                  className={`graph-node ${node.state} ${selected.id === node.id ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}`}
+                  className={`graph-node ${node.state} ${selected.id === node.id ? 'selected' : ''} ${highlightedNodeIds.includes(node.id) ? 'active-path' : ''} ${dimmed ? 'dimmed' : ''}`}
                   style={{ left: `${node.x}%`, top: `${node.y}%` }}
                   onClick={() => focusNode(node.id)}
                   aria-pressed={selected.id === node.id}
@@ -587,6 +782,127 @@ export default function Home() {
               <span><i className="warning" />Needs proof</span>
             </div>
           </div>
+
+          <section className={`agent-console ${consoleState.kind}`} aria-label="Live agent console">
+            <div className="console-header">
+              <div>
+                <span className="console-live"><i aria-hidden="true" /> AGENT CONSOLE</span>
+                <small>{demoStep}</small>
+              </div>
+              <button className="demo-button" onClick={runFullDemo} disabled={demoRunning}>
+                {demoRunning ? 'DEMO RUNNING' : 'RUN FULL DEMO'} <span aria-hidden="true">▶</span>
+              </button>
+            </div>
+
+            <div className="console-content">
+              <div className="console-timeline" aria-label="Tool invocation timeline">
+                {agentEvents.length === 0 ? (
+                  <div className="console-empty">
+                    <span>READY</span>
+                    <p>Use WebMCP or run the guided replay.</p>
+                  </div>
+                ) : (
+                  agentEvents.map((event) => (
+                    <div className={`console-event ${event.decision}`} key={event.id}>
+                      <i aria-hidden="true" />
+                      <span>
+                        <code>{event.toolName}</code>
+                        <small>{event.summary}</small>
+                      </span>
+                      <b>{event.decision === 'allow-context' ? 'ALLOW' : event.decision.toUpperCase()}</b>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="console-result" aria-live="polite">
+                {consoleState.kind === 'overview' && (
+                  <div className="result-overview">
+                    <p>PINNED PROJECT OVERVIEW</p>
+                    <strong>Integrity verified. Runtime uncertainty is still visible.</strong>
+                    <div className="metric-row">
+                      <span><b>{fixtureArtifact.graph.nodes.length}</b> nodes</span>
+                      <span><b>{fixtureArtifact.graph.edges.length}</b> relations</span>
+                      <span><b>{fixtureArtifact.graph.unknowns.length}</b> unknown</span>
+                      <span className="pass"><b>PASS</b> integrity</span>
+                    </div>
+                  </div>
+                )}
+
+                {consoleState.kind === 'focus' && (() => {
+                  const focused = nodes.find((node) => node.id === consoleState.entityId)!;
+                  return (
+                    <div className="result-focus">
+                      <p>EXACT ENTITY · {focused.type}</p>
+                      <strong>{focused.label}</strong>
+                      <code>{focused.id}</code>
+                      <span className={`result-state ${focused.state}`}>{stateLabel(focused.state)}</span>
+                      <small>
+                        {focused.state === 'warning'
+                          ? 'Capability is declared; exact server-side enforcement evidence is not proven.'
+                          : 'The inspector and graph now share this exact source-backed entity.'}
+                      </small>
+                    </div>
+                  );
+                })()}
+
+                {consoleState.kind === 'path' && (
+                  <div className="result-path">
+                    <p>BOUNDED SOURCE-BACKED PATH</p>
+                    <strong>{consoleState.entities.length} entities · {consoleState.relations.length} relations</strong>
+                    <div className="path-strip">
+                      {consoleState.entities.map((entityId, index) => (
+                        <span key={entityId}>
+                          <b>{nodes.find((node) => node.id === entityId)?.label}</b>
+                          {index < consoleState.entities.length - 1 && <i aria-hidden="true">→</i>}
+                        </span>
+                      ))}
+                    </div>
+                    <small><i className="warning-dot" /> 1 relation still needs server-side proof · mutation: false</small>
+                  </div>
+                )}
+
+                {consoleState.kind === 'finding' && (
+                  <div className="result-finding">
+                    <div><span className={`severity ${consoleState.finding.severity}`}>{consoleState.finding.severity}</span><code>{consoleState.finding.id}</code><b>{consoleState.finding.state}</b></div>
+                    <strong>{consoleState.finding.title}</strong>
+                    <p>{consoleState.finding.detail}</p>
+                    <small>Exact entity · {consoleState.finding.nodeId}</small>
+                  </div>
+                )}
+
+                {consoleState.kind === 'comparison' && (
+                  <div className="result-comparison">
+                    <p>EXPECTED ↔ OBSERVED · {consoleState.scope.toUpperCase()}</p>
+                    <div className="comparison-snapshots">
+                      <span><small>EXPECTED</small><b>snp_expected_004</b></span>
+                      <i aria-hidden="true">≠</i>
+                      <span><small>OBSERVED</small><b>win_observed_018</b></span>
+                    </div>
+                    <div className="preserved-states">
+                      <span className="unknown">UNKNOWN</span>
+                      <span className="blind-spot">BLIND SPOT</span>
+                      <span className="review">REVIEW</span>
+                      <small>Nothing was promoted to verified.</small>
+                    </div>
+                  </div>
+                )}
+
+                {consoleState.kind === 'deny' && (
+                  <div className="result-deny" role="alert">
+                    <p>FAIL-CLOSED · LOCAL SAFETY REHEARSAL</p>
+                    <strong>Unknown entity rejected</strong>
+                    <code>requested: {consoleState.requestedId}</code>
+                    <span>reason: {consoleState.reason}</span>
+                    <small>
+                      selected before/after: {consoleState.selectedBefore} / {consoleState.selectedAfter}
+                      <b>SELECTION UNCHANGED · mutation: false</b>
+                    </small>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
 
           <div className="activity-line" aria-live="polite">
             <span>LAST SHARED ACTION</span>
@@ -649,38 +965,6 @@ export default function Home() {
         </aside>
       </div>
 
-      <section className="findings-panel" aria-label="Architecture findings">
-        <div className="findings-heading">
-          <div>
-            <p className="eyebrow">EVIDENCE, NOT VERDICTS</p>
-            <h2>Open review items</h2>
-          </div>
-          <p>Every finding stays tied to an exact entity, state and source.</p>
-        </div>
-        <div className="finding-list">
-          {findings.map((finding) => (
-            <button
-              key={finding.id}
-              className="finding-row"
-              onClick={() => {
-                focusNode(finding.nodeId);
-                setMode('Deviations');
-              }}
-            >
-              <span className={`severity ${finding.severity}`}>{finding.severity}</span>
-              <code>{finding.id}</code>
-              <span className="finding-copy"><strong>{finding.title}</strong><small>{finding.detail}</small></span>
-              <span className="finding-state">{finding.state}</span>
-              <span className="finding-arrow">↗</span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <footer>
-        <span>DSH Project Atlas · WebMCP Challenge build</span>
-        <span>All project data and overlay relationships are synthetic.</span>
-      </footer>
     </main>
   );
 }

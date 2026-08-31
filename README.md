@@ -49,6 +49,16 @@ mutation surface.
 The page remains a normal interactive demo in browsers that do not yet expose
 WebMCP. Its status pill then reads **Browser preview**.
 
+## Guided visual replay
+
+Use **RUN FULL DEMO** in the always-visible Agent Console to replay the same
+read-only operations at presentation speed. The graph highlights the complete
+bounded path, the console shows structured tool decisions, uncertainty remains
+visible, and an unknown entity demonstrates fail-closed behavior without
+changing the current selection. On desktop, the complete workspace fits the
+viewport; only the rail, inspector, or console may scroll internally when the
+available space is unusually small.
+
 ## Architecture
 
 ```mermaid
