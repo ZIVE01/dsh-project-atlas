@@ -8,6 +8,12 @@ timing. It calls the page's read-only handlers directly so that narration can be
 practised. The submitted video must show real WebMCP calls from the agent chat;
 do not describe the guided rehearsal as an external tool invocation.
 
+Every real WebMCP call and every guided-rehearsal stage also updates the
+prominent `WHAT THIS PROVES` card in the inspector. Keep that card visible in
+the recording: it translates the selected graph state into the human meaning
+of the evidence. The spoken narration below should explain the same conclusion
+in natural language rather than merely reading node labels.
+
 ## 0:00–0:12 — Project and safety boundary
 
 Show the public URL, complete Map, `SYNTHETIC`, `WebMCP connected`, `READ ONLY`
@@ -15,6 +21,8 @@ and `5 LIVE` indicators.
 
 Call `inspect_project_overview` and show the pinned namespace, integrity result,
 24-node portable-core fixture, 19-node readable overlay and preserved unknown.
+
+Visible proof card: `A safe shared map`.
 
 Narration: “Project Atlas gives people and agents one evidence-aware map of a
 software project. This public demonstration uses synthetic data and exposes
@@ -27,6 +35,8 @@ Call `focus_graph_entity` with `screen:project-search`.
 Explain that the graph, inspector and agent result all refer to the same stable
 entity ID rather than a pixel location or guessed label.
 
+Visible proof card: `IDs, not pixels`.
+
 ## 0:22–0:41 — Bounded path
 
 Call `trace_architecture_path` from `screen:project-search` to `store:catalog`.
@@ -35,12 +45,16 @@ Walk across the exact screen, route, API, `catalog.read` capability, owner
 handler and store. The tool must not invent the unresolved enforcement edge;
 the result remains bounded and `mutation: false`.
 
+Visible proof card: `Evidence-bounded path`.
+
 ## 0:41–0:54 — Capability and consumers
 
 Call `focus_graph_entity` with `capability:catalog-write`.
 
 Show the approved mutation chain through route, API, policy, handler, owned data
 and audit. Explain that one stable capability can govern every known consumer.
+
+Visible proof card: `Central policy anchor`.
 
 ## 0:54–1:08 — Visible bypass
 
@@ -50,6 +64,8 @@ Show the red direct `screen:catalog-admin → handler:catalog-update` relation.
 It skips the approved route, API and `catalog.write` capability, so Atlas keeps
 it visible as a bypass instead of normalizing it away.
 
+Visible proof card: `Bypass stays visible`.
+
 ## 1:08–1:21 — Missing server proof
 
 Call `focus_graph_entity` with `handler:lookup`.
@@ -58,12 +74,16 @@ Explain that the capability is declared, but the exact backend enforcement
 evidence is absent. Atlas therefore shows `Needs proof` rather than claiming
 the chain is safe.
 
+Visible proof card: `No proof, no trust`.
+
 ## 1:21–1:39 — Expected versus observed
 
 Call `compare_architecture_layers` with `scope=all`.
 
 Show `EXPECTED ≠ OBSERVED` and the preserved `UNKNOWN`, `BLIND SPOT` and
 `REVIEW` states. Nothing uncertain is silently promoted to verified.
+
+Visible proof card: `Uncertainty survives`.
 
 ## 1:39–2:01 — Blind spot and review evidence
 
@@ -73,6 +93,8 @@ Call `focus_graph_entity` with `telemetry:window`, then call
 Explain that observed coverage is 72%; the missing 28% remains a blind spot.
 Candidate evidence without a trustworthy source remains review-only.
 
+Visible proof cards: `Coverage is not certainty`, then `Candidate, not fact`.
+
 ## 2:01–2:17 — Fail closed
 
 Ask for the nonexistent `handler:payment`. A conforming WebMCP client can reject
@@ -80,12 +102,16 @@ it at the closed input schema before execution. Show that the page selection is
 unchanged. If the page's guided rehearsal is used, label its denial explicitly
 as a local safety rehearsal.
 
+Visible proof card in the local safety path: `Unknown means deny`.
+
 ## 2:17–2:29 — Read-only agent boundary
 
 Call `focus_graph_entity` with `agent:webmcp-review`.
 
 Show the five registered tools and explain that there is no database, shell,
 deployment, production or mutation control.
+
+Visible proof card: `Insight without authority`.
 
 ## 2:29–2:45 — Jury summary
 
@@ -100,6 +126,7 @@ namespace.”
 
 - Use the final public URL, not a local preview.
 - Invoke every one of the five WebMCP tools at least once.
+- Keep `WHAT THIS PROVES` visible whenever the selected state changes.
 - Keep the URL, connection and read-only state visible at the beginning.
 - Capture narration clearly and keep the final video below three minutes.
 - Do not show accounts, private tabs, notifications, local paths or credentials.

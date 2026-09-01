@@ -572,6 +572,123 @@ function focusExplanation(node: GraphNode) {
   return 'The inspector and graph now share this exact source-backed entity.';
 }
 
+function liveExplanationFor(
+  state: ConsoleState,
+  selected: GraphNode,
+  selectedHasBypass: boolean,
+) {
+  if (state.kind === 'summary') {
+    return {
+      badge: 'COMPLETE',
+      tone: 'summary',
+      title: 'Shared evidence, bounded power',
+      lines: ['People and agents see one exact graph.', 'Bypasses and uncertainty stay visible.'],
+    };
+  }
+  if (state.kind === 'deny') {
+    return {
+      badge: 'DENY',
+      tone: 'deny',
+      title: 'Unknown means deny',
+      lines: [`No exact entity matched ${state.requestedId}.`, 'Selection and project data stay unchanged.'],
+    };
+  }
+  if (state.kind === 'comparison') {
+    return {
+      badge: 'PRESERVED',
+      tone: 'unknown',
+      title: 'Uncertainty survives',
+      lines: ['Expected and observed can differ.', 'UNKNOWN · BLIND SPOT · REVIEW stay visible.'],
+    };
+  }
+  if (state.kind === 'path') {
+    return {
+      badge: 'BOUNDED',
+      tone: 'verified',
+      title: 'Evidence-bounded path',
+      lines: ['Only source-backed links are traced.', 'Missing proof stays visible.'],
+    };
+  }
+  if (state.kind === 'finding') {
+    if (state.finding.id === 'DSH-080') {
+      return {
+        badge: 'BYPASS',
+        tone: 'risk',
+        title: 'Bypass stays visible',
+        lines: ['Red skips the route, API and policy.', 'Atlas never normalizes it away.'],
+      };
+    }
+    return {
+      badge: state.finding.state,
+      tone: state.finding.state === 'BLIND SPOT' ? 'risk' : 'review',
+      title: 'Candidate, not fact',
+      lines: ['This evidence lacks trusted provenance.', 'It remains review-only.'],
+    };
+  }
+  if (state.kind === 'overview') {
+    return {
+      badge: 'PINNED',
+      tone: 'verified',
+      title: 'A safe shared map',
+      lines: ['One pinned graph guides both sides.', 'No project data or code can change.'],
+    };
+  }
+  if (selected.id === 'screen:project-search') {
+    return {
+      badge: 'EXACT ID',
+      tone: 'verified',
+      title: 'IDs, not pixels',
+      lines: ['Human and agent share one stable ID.', 'No label guessing is involved.'],
+    };
+  }
+  if (selected.id === 'capability:catalog-write') {
+    return {
+      badge: 'CAPABILITY',
+      tone: 'verified',
+      title: 'Central policy anchor',
+      lines: ['One capability governs known writes.', 'Bypasses remain visibly separate.'],
+    };
+  }
+  if (selected.id === 'handler:lookup') {
+    return {
+      badge: 'NEEDS PROOF',
+      tone: 'review',
+      title: 'No proof, no trust',
+      lines: ['The policy exists; backend proof does not.', 'The chain stays untrusted.'],
+    };
+  }
+  if (selected.id === 'telemetry:window') {
+    return {
+      badge: 'BLIND SPOT',
+      tone: 'risk',
+      title: 'Coverage is not certainty',
+      lines: ['Only 72% was observed.', 'The missing 28% stays a blind spot.'],
+    };
+  }
+  if (selected.id === 'agent:webmcp-review') {
+    return {
+      badge: 'READ ONLY',
+      tone: 'verified',
+      title: 'Insight without authority',
+      lines: ['Five tools inspect the graph.', 'None can edit, deploy or query a database.'],
+    };
+  }
+  if (selectedHasBypass) {
+    return {
+      badge: 'BYPASS',
+      tone: 'risk',
+      title: 'Bypass stays visible',
+      lines: ['This owner has a direct red path.', 'A reviewer must resolve it deliberately.'],
+    };
+  }
+  return {
+    badge: stateLabel(selected.state),
+    tone: selected.state === 'verified' ? 'verified' : 'review',
+    title: 'One exact project fact',
+    lines: ['Identity and provenance stay attached.', 'Human and agent inspect the same entity.'],
+  };
+}
+
 export default function Home() {
   const [mode, setMode] = useState<ViewMode>('Architecture');
   const [graphPresentation, setGraphPresentation] = useState<GraphPresentation>('map');
@@ -626,6 +743,7 @@ export default function Home() {
   const outgoingRelations = edges.filter((edge) => edge.from === selected.id);
   const selectedHasBypass = [...incomingRelations, ...outgoingRelations]
     .some((edge) => edge.state === 'bypass');
+  const liveExplanation = liveExplanationFor(consoleState, selected, selectedHasBypass);
   const matchingNodes = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return new Set(
@@ -1476,6 +1594,21 @@ export default function Home() {
             <small>{selectedHasBypass ? 'Review required' : selected.state === 'verified' ? 'Source-backed relation' : 'Not safe to promote'}</small>
           </div>
 
+          <section
+            className={`live-explanation ${liveExplanation.tone}`}
+            aria-label="Live explanation"
+            aria-live="polite"
+          >
+            <div>
+              <span>WHAT THIS PROVES</span>
+              <b>{liveExplanation.badge}</b>
+            </div>
+            <strong>{liveExplanation.title}</strong>
+            <p>
+              {liveExplanation.lines.map((line) => <span key={line}>{line}</span>)}
+            </p>
+          </section>
+
           <dl className="fact-list">
             <div><dt>Layer</dt><dd>{selected.layer}</dd></div>
             <div><dt>Domain</dt><dd>{selected.domain}</dd></div>
@@ -1489,19 +1622,6 @@ export default function Home() {
             <p>PROVENANCE</p>
             <code>{selected.provenance}</code>
             <span>Overlay reference · engine fixture verified separately</span>
-          </div>
-
-          <div className="inspector-note">
-            <span>Why this matters</span>
-            <p>
-              {selectedHasBypass
-                ? 'This owner has a red direct path that bypasses the approved route, API and capability chain. Atlas keeps that exception visible.'
-                : selected.state === 'warning'
-                ? 'The policy is declared, but this handler needs exact server-side enforcement evidence before the chain can be trusted.'
-                : selected.state === 'blind-spot'
-                  ? 'Missing observation is preserved as a blind spot. It is never treated as proof that a path does not exist.'
-                  : 'This fact stays attached to its exact source and cannot silently cross into another project.'}
-            </p>
           </div>
 
           <button

@@ -1531,6 +1531,71 @@ a:focus-visible {
   font-size: 8px;
 }
 
+.live-explanation {
+  --explanation-accent: var(--violet);
+  margin: -2px 0 16px;
+  padding: 13px 13px 12px;
+  border: 1px solid rgba(102, 87, 217, .24);
+  border-left: 4px solid var(--explanation-accent);
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 96% 4%, rgba(102, 87, 217, .13), transparent 42%),
+    #f8f7ff;
+  box-shadow: 0 8px 22px rgba(49, 42, 99, .07);
+}
+
+.live-explanation.review { --explanation-accent: var(--amber); }
+.live-explanation.risk,
+.live-explanation.deny { --explanation-accent: var(--red); }
+.live-explanation.summary { --explanation-accent: var(--green); }
+.live-explanation.unknown { --explanation-accent: #7d8581; }
+
+.live-explanation > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.live-explanation > div span {
+  color: var(--violet);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .1em;
+}
+
+.live-explanation > div b {
+  flex: 0 0 auto;
+  padding: 3px 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--explanation-accent) 12%, white);
+  color: var(--explanation-accent);
+  font-size: 7px;
+  letter-spacing: .06em;
+}
+
+.live-explanation > strong {
+  display: block;
+  margin-top: 9px;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.18;
+  letter-spacing: -.02em;
+}
+
+.live-explanation > p {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0 0;
+  color: #59615d;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.live-explanation > p span {
+  display: block;
+}
+
 .fact-list {
   margin: 0;
   border-top: 1px solid var(--line);
@@ -1547,8 +1612,7 @@ a:focus-visible {
 .fact-list dt { color: var(--muted); }
 .fact-list dd { margin: 0; font-weight: 650; }
 
-.provenance-card,
-.inspector-note {
+.provenance-card {
   margin-top: 16px;
   padding: 12px;
   border: 1px solid var(--line);
@@ -1578,21 +1642,6 @@ a:focus-visible {
   color: var(--green);
   font-size: 8px;
   font-weight: 650;
-}
-
-.inspector-note span {
-  color: var(--violet);
-  font-size: 8px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.inspector-note p {
-  margin: 7px 0 0;
-  color: #626966;
-  font-size: 9px;
-  line-height: 1.55;
 }
 
 .source-button {

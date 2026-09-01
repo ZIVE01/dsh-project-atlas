@@ -99,6 +99,25 @@ Fix made:
   relations, inspector, global theme, and all non-demo controls were unchanged.
 - No actionable P0, P1, or P2 issue remains.
 
+### Iteration 6 — synchronized human explanation
+
+- Added one prominent `WHAT THIS PROVES` card immediately after the inspector
+  safety banner, before technical facts and provenance.
+- Real calls to all five page-defined WebMCP tools were exercised against the
+  local build. The card followed overview, exact focus, bounded path, high-risk
+  finding, expected/observed comparison, blind spot, read-only agent boundary,
+  missing backend proof and fail-closed denial states.
+- An unknown `handler:payment` returned `deny`, preserved the exact selected
+  entity and displayed `Unknown means deny`; no project mutation occurred.
+- Effective 1366 × 768: card measured about 223 × 102 CSS pixels, remained
+  fully visible, the inspector needed no internal scroll, and document size
+  matched the viewport.
+- Effective 1440 × 900: card remained fully visible, the inspector needed no
+  internal scroll, and document size again matched the viewport.
+- Full-frame inspection confirmed unchanged graph geometry, BYPASS routing,
+  typography hierarchy, shell proportions, theme and Agent Console layout.
+- No actionable P0, P1 or P2 visual regression remains.
+
 ## Follow-up polish
 
 - [P3] A future mobile-specific map presentation could replace the current intentionally desktop-first wide canvas. It is not required for the challenge's desktop WebMCP demonstration.

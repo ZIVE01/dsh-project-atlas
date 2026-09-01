@@ -61,6 +61,20 @@ test('guided rehearsal is timed to 2:45 with an under-three-minute safety margin
   assert.match(source, /DEMO COMPLETE · \$\{DEMO_DURATION_LABEL\} · READ ONLY/);
 });
 
+test('live explanation translates every safety state for the human reviewer', () => {
+  assert.match(source, /aria-label="Live explanation"/);
+  assert.match(source, /WHAT THIS PROVES/);
+  assert.match(source, /Shared evidence, bounded power/);
+  assert.match(source, /Bypass stays visible/);
+  assert.match(source, /No proof, no trust/);
+  assert.match(source, /Uncertainty survives/);
+  assert.match(source, /Coverage is not certainty/);
+  assert.match(source, /Unknown means deny/);
+  assert.match(source, /Insight without authority/);
+  assert.ok(source.indexOf('className={`live-explanation') < source.indexOf('<dl className="fact-list">'));
+  assert.match(styles, /\.live-explanation\s*\{[^}]*border-left:\s*4px solid var\(--explanation-accent\);/s);
+});
+
 test('capability map keeps domains, paths and bypasses explicit', () => {
   assert.match(source, /type GraphPresentation = 'map' \| 'path'/);
   assert.match(source, /const domainClusters = \[/);
