@@ -970,6 +970,27 @@ a:focus-visible {
   letter-spacing: .04em;
 }
 
+.demo-status {
+  display: inline-grid;
+  gap: 4px;
+}
+
+.demo-status > i {
+  width: 178px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+}
+
+.demo-status > i > b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #9f91ff;
+  transition: width .35s ease;
+}
+
 .demo-button {
   display: inline-flex;
   align-items: center;
@@ -1106,7 +1127,8 @@ a:focus-visible {
 .result-focus > p,
 .result-path > p,
 .result-comparison > p,
-.result-deny > p {
+.result-deny > p,
+.result-summary > p {
   color: #91a19a;
   font-size: 7px;
   font-weight: 850;
@@ -1115,7 +1137,8 @@ a:focus-visible {
 
 .result-overview > strong,
 .result-path > strong,
-.result-deny > strong {
+.result-deny > strong,
+.result-summary > strong {
   display: block;
   margin-top: 4px;
   font-size: 11px;
@@ -1190,6 +1213,32 @@ a:focus-visible {
 .result-state.warning { color: #efb46e; background: rgba(229, 162, 83, .13); }
 .result-state.unknown { color: #bdc6c1; background: rgba(189, 198, 193, .1); }
 .result-state.blind-spot { color: #ff8e88; background: rgba(242, 110, 105, .12); }
+
+.result-summary > div {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.result-summary > div span {
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, .065);
+  color: #a9b4af;
+  font-size: 7px;
+}
+
+.result-summary > div b {
+  color: #72d9a1;
+  font-size: 9px;
+}
+
+.result-summary > small {
+  display: block;
+  margin-top: 7px;
+  color: #91a19a;
+  font-size: 7px;
+}
 
 .path-strip {
   display: flex;

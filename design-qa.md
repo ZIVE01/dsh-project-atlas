@@ -81,6 +81,24 @@ Fix made:
 - Fonts, spacing, colors, images/assets, copy, shell proportions, and all non-BYPASS relations are unchanged.
 - No actionable P0, P1, or P2 issue remains.
 
+### Iteration 5 — 2:45 guided-demonstration evidence
+
+- The complete rehearsal was run at real speed from start to finish: all 12
+  stages completed, progress reached 100%, the final focus returned to
+  `handler:lookup`, and the console displayed the dedicated jury summary.
+- The five-tool timeline automatically followed the newest event. The
+  fail-closed rehearsal remained visible as `DENY`, while later read-only focus
+  calls remained `ALLOW`.
+- Effective 1440 × 900: the progress indicator, longer stage label, demo button,
+  timeline, four summary metrics, graph, and inspector all remained inside the
+  shell; document width and height exactly matched the viewport.
+- Effective 1366 × 768: the final summary measured 503 × 80 CSS pixels and
+  remained fully inside the console; the document again matched the viewport
+  with no horizontal or vertical page scroll.
+- Typography, font weights, colors, card geometry, domain layout, graph
+  relations, inspector, global theme, and all non-demo controls were unchanged.
+- No actionable P0, P1, or P2 issue remains.
+
 ## Follow-up polish
 
 - [P3] A future mobile-specific map presentation could replace the current intentionally desktop-first wide canvas. It is not required for the challenge's desktop WebMCP demonstration.

@@ -1,79 +1,107 @@
-# Narrated demo script — under three minutes
+# Narrated WebMCP demo script — 2:45 target
 
-Record the exact public build with sound. Keep the browser URL, **WebMCP
-connected**, and **READ ONLY** status visible at the beginning. Target duration:
-approximately 2 minutes 50 seconds.
+Record the exact public build with sound. The contest limit is **under three
+minutes**, so the target recording is 2:45–2:50 and must never reach 3:00.
 
-## 0:00–0:20 — The problem and the map
+The page button runs a deterministic **guided rehearsal** with the same 2:45
+timing. It calls the page's read-only handlers directly so that narration can be
+practised. The submitted video must show real WebMCP calls from the agent chat;
+do not describe the guided rehearsal as an external tool invocation.
 
-“A codebase is easy to search and hard to understand. Interfaces, routes,
-capabilities, handlers, owned data, audit, and runtime evidence drift apart.
-Project Atlas gives people and agents the same evidence-aware map.”
+## 0:00–0:12 — Project and safety boundary
 
-Show the complete Map view. Point out the seven domains, 19 visible nodes, 20
-relations, and synthetic-data label.
+Show the public URL, complete Map, `SYNTHETIC`, `WebMCP connected`, `READ ONLY`
+and `5 LIVE` indicators.
 
-## 0:20–0:45 — Structured project overview
+Call `inspect_project_overview` and show the pinned namespace, integrity result,
+24-node portable-core fixture, 19-node readable overlay and preserved unknown.
 
-Ask the agent: “Inspect the current project overview.”
+Narration: “Project Atlas gives people and agents one evidence-aware map of a
+software project. This public demonstration uses synthetic data and exposes
+only five read-only WebMCP tools.”
 
-Explain that WebMCP returns a typed summary with stable IDs and integrity state
-instead of forcing the agent to scrape pixels. The visible Agent Console should
-show the same read-only result.
+## 0:12–0:22 — Shared exact entity
 
-## 0:45–1:10 — Capabilities and consumers
+Call `focus_graph_entity` with `screen:project-search`.
 
-Ask: “Focus `capability:catalog-write` and show its consumers.”
+Explain that the graph, inspector and agent result all refer to the same stable
+entity ID rather than a pixel location or guessed label.
 
-Show how capability control connects the admin interface to the approved API,
-handler, and owned catalog data. Then point out the red **BYPASS** relation: the
-legacy direct UI-to-handler path is visible, not normalized away.
+## 0:22–0:41 — Bounded path
 
-## 1:10–1:35 — Evidence is not a verdict
+Call `trace_architecture_path` from `screen:project-search` to `store:catalog`.
 
-Ask: “Focus `handler:lookup` and explain why it needs proof.”
+Walk across the exact screen, route, API, `catalog.read` capability, owner
+handler and store. The tool must not invent the unresolved enforcement edge;
+the result remains bounded and `mutation: false`.
 
-Show the selected node and inspector changing together. Explain that the
-capability is declared but exact server-side enforcement evidence is missing,
-so Atlas keeps the relation in needs-proof state.
+## 0:41–0:54 — Capability and consumers
 
-## 1:35–2:00 — Map to bounded Path
+Call `focus_graph_entity` with `capability:catalog-write`.
 
-Ask: “Trace the path from `screen:project-search` to `store:catalog`.”
+Show the approved mutation chain through route, API, policy, handler, owned data
+and audit. Explain that one stable capability can govern every known consumer.
 
-Show the switch from the full Map to Path view and walk across the exact route,
-API, capability, handler, and store. Mention that the tool does not invent a
-missing edge.
+## 0:54–1:08 — Visible bypass
 
-## 2:00–2:25 — Findings and architectural comparison
+Call `list_security_findings` with `severity=high`.
 
-Ask: “List high-severity findings and compare the security layers while
-preserving every unknown.”
+Show the red direct `screen:catalog-admin → handler:catalog-update` relation.
+It skips the approved route, API and `catalog.write` capability, so Atlas keeps
+it visible as a bypass instead of normalizing it away.
 
-Show the BYPASS finding and the expected-versus-observed comparison. Point out
-the explicit **UNKNOWN**, **BLIND SPOT**, and **REVIEW** states.
+## 1:08–1:21 — Missing server proof
 
-## 2:25–2:40 — Fail closed
+Call `focus_graph_entity` with `handler:lookup`.
 
-Ask the agent to focus the nonexistent `handler:payment`.
+Explain that the capability is declared, but the exact backend enforcement
+evidence is absent. Atlas therefore shows `Needs proof` rather than claiming
+the chain is safe.
 
-Show that the request is rejected and the previous selection remains
-unchanged. Explain that an unsupported identifier cannot become a graph fact.
+## 1:21–1:39 — Expected versus observed
 
-## 2:40–2:55 — Safety and portability
+Call `compare_architecture_layers` with `scope=all`.
 
-Return to the full Map. Show the five-tool list and close with:
+Show `EXPECTED ≠ OBSERVED` and the preserved `UNKNOWN`, `BLIND SPOT` and
+`REVIEW` states. Nothing uncertain is silently promoted to verified.
 
-“Project Atlas lets people and agents investigate the same architecture, but it
-has no database, shell, deployment, production, or mutation controls. The core
-is Apache-2.0 and each project can keep an isolated graph namespace.”
+## 1:39–2:01 — Blind spot and review evidence
+
+Call `focus_graph_entity` with `telemetry:window`, then call
+`list_security_findings` with `severity=info`.
+
+Explain that observed coverage is 72%; the missing 28% remains a blind spot.
+Candidate evidence without a trustworthy source remains review-only.
+
+## 2:01–2:17 — Fail closed
+
+Ask for the nonexistent `handler:payment`. A conforming WebMCP client can reject
+it at the closed input schema before execution. Show that the page selection is
+unchanged. If the page's guided rehearsal is used, label its denial explicitly
+as a local safety rehearsal.
+
+## 2:17–2:29 — Read-only agent boundary
+
+Call `focus_graph_entity` with `agent:webmcp-review`.
+
+Show the five registered tools and explain that there is no database, shell,
+deployment, production or mutation control.
+
+## 2:29–2:45 — Jury summary
+
+Return to `handler:lookup` and close with:
+
+“Project Atlas lets people and agents investigate the same exact architecture.
+It exposes bypasses, preserves uncertainty and rejects unsupported requests.
+The reusable core is Apache-2.0, while every project keeps an isolated graph
+namespace.”
 
 ## Recording checklist
 
 - Use the final public URL, not a local preview.
-- Capture narration and system audio clearly.
-- Keep the video below three minutes.
-- Do not display accounts, private browser tabs, notifications, local paths, or
-  credentials.
+- Invoke every one of the five WebMCP tools at least once.
+- Keep the URL, connection and read-only state visible at the beginning.
+- Capture narration clearly and keep the final video below three minutes.
+- Do not show accounts, private tabs, notifications, local paths or credentials.
 - Upload publicly to YouTube and add the URL to
   [`CHALLENGE-SUBMISSION.md`](CHALLENGE-SUBMISSION.md).

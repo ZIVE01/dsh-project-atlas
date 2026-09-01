@@ -73,6 +73,7 @@ type ConsoleState =
   | { kind: 'path'; entities: string[]; relations: GraphEdge[] }
   | { kind: 'finding'; finding: Finding }
   | { kind: 'comparison'; scope: string }
+  | { kind: 'summary' }
   | {
       kind: 'deny';
       requestedId: string;
@@ -452,7 +453,22 @@ const domainClusters = [
   { id: 'observed', label: 'OBSERVED EVIDENCE', left: 79, top: 83, width: 19, height: 15 },
 ] as const;
 
-const DEMO_STEP_MS = 4000;
+const DEMO_STAGES = [
+  { label: 'PROJECT + SAFETY', timecode: '0:00–0:12', durationMs: 12_000 },
+  { label: 'SHARED ENTITY', timecode: '0:12–0:22', durationMs: 10_000 },
+  { label: 'BOUNDED READ PATH', timecode: '0:22–0:41', durationMs: 19_000 },
+  { label: 'CAPABILITY + CONSUMERS', timecode: '0:41–0:54', durationMs: 13_000 },
+  { label: 'VISIBLE BYPASS', timecode: '0:54–1:08', durationMs: 14_000 },
+  { label: 'SERVER PROOF', timecode: '1:08–1:21', durationMs: 13_000 },
+  { label: 'EXPECTED VS OBSERVED', timecode: '1:21–1:39', durationMs: 18_000 },
+  { label: 'BLIND SPOT', timecode: '1:39–1:50', durationMs: 11_000 },
+  { label: 'REVIEW EVIDENCE', timecode: '1:50–2:01', durationMs: 11_000 },
+  { label: 'FAIL CLOSED', timecode: '2:01–2:17', durationMs: 16_000 },
+  { label: 'READ-ONLY AGENT', timecode: '2:17–2:29', durationMs: 12_000 },
+  { label: 'JURY SUMMARY', timecode: '2:29–2:45', durationMs: 16_000 },
+] as const;
+const DEMO_TOTAL_MS = DEMO_STAGES.reduce((total, stage) => total + stage.durationMs, 0);
+const DEMO_DURATION_LABEL = '2:45';
 const MIN_GRAPH_SCALE = 0.75;
 const MAX_GRAPH_SCALE = 1.4;
 
@@ -540,6 +556,22 @@ function waitForDemo(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+function focusExplanation(node: GraphNode) {
+  if (node.id === 'capability:catalog-write') {
+    return 'One stable policy connects the approved route, API, owner handler and every known consumer.';
+  }
+  if (node.id === 'agent:webmcp-review') {
+    return 'The agent can inspect five bounded tools; no mutation, database, shell, deploy or production control exists.';
+  }
+  if (node.state === 'warning') {
+    return 'Capability is declared; exact server-side enforcement evidence is not proven.';
+  }
+  if (node.state === 'blind-spot') {
+    return 'Runtime evidence covers only 72%; the missing window stays a visible blind spot.';
+  }
+  return 'The inspector and graph now share this exact source-backed entity.';
+}
+
 export default function Home() {
   const [mode, setMode] = useState<ViewMode>('Architecture');
   const [graphPresentation, setGraphPresentation] = useState<GraphPresentation>('map');
@@ -553,12 +585,14 @@ export default function Home() {
   const [consoleState, setConsoleState] = useState<ConsoleState>({ kind: 'overview' });
   const [agentEvents, setAgentEvents] = useState<AgentEvent[]>([]);
   const [demoRunning, setDemoRunning] = useState(false);
-  const [demoStep, setDemoStep] = useState('READY');
+  const [demoStep, setDemoStep] = useState('READY · 2:45 GUIDED REHEARSAL');
+  const [demoProgress, setDemoProgress] = useState(0);
   const [camera, setCamera] = useState({ scale: 1, x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const selectedIdRef = useRef(selectedId);
   const eventSequence = useRef(0);
   const demoRun = useRef(0);
+  const consoleTimelineRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{
     pointerId: number;
     startX: number;
@@ -816,55 +850,89 @@ export default function Home() {
     demoRun.current = runId;
     setDemoRunning(true);
     setAgentEvents([]);
+    setMode('Architecture');
+    setQuery('');
+    setActiveLayer('All');
+    setDemoProgress(0);
 
     const continueDemo = () => demoRun.current === runId;
-    const pause = async () => {
-      await waitForDemo(DEMO_STEP_MS);
+    const pause = async (durationMs: number) => {
+      await waitForDemo(durationMs);
       return continueDemo();
     };
+    const beginStage = (index: number) => {
+      const stage = DEMO_STAGES[index];
+      const elapsedMs = DEMO_STAGES
+        .slice(0, index)
+        .reduce((total, candidate) => total + candidate.durationMs, 0);
+      setDemoProgress((elapsedMs / DEMO_TOTAL_MS) * 100);
+      setDemoStep(`${index + 1} / ${DEMO_STAGES.length} · ${stage.timecode} · ${stage.label}`);
+      return stage;
+    };
 
-    setDemoStep('1 / 9 · OVERVIEW');
+    let stage = beginStage(0);
     inspectProjectOverview();
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('2 / 9 · EXACT ENTITY');
+    stage = beginStage(1);
     focusExactEntity('screen:project-search');
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('3 / 9 · BOUNDED PATH');
+    stage = beginStage(2);
     const traced = traceArchitecturePath('screen:project-search', 'store:catalog');
+    let pathAnimationMs = 0;
     if (Array.isArray(traced.entities)) {
       for (const entityId of traced.entities) {
         if (!continueDemo()) return;
         setSelectedNode(entityId);
-        await waitForDemo(520);
+        await waitForDemo(1_300);
+        pathAnimationMs += 1_300;
       }
     }
-    if (!(await pause())) return;
+    if (!(await pause(Math.max(0, stage.durationMs - pathAnimationMs)))) return;
 
-    setDemoStep('4 / 9 · HIGH FINDING');
+    stage = beginStage(3);
+    focusExactEntity('capability:catalog-write');
+    if (!(await pause(stage.durationMs))) return;
+
+    stage = beginStage(4);
     listSecurityFindings('high');
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('5 / 9 · SERVER PROOF');
+    stage = beginStage(5);
     focusExactEntity('handler:lookup');
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('6 / 9 · EXPECTED VS OBSERVED');
+    stage = beginStage(6);
     compareArchitectureLayers('all');
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('7 / 9 · BLIND SPOT');
+    stage = beginStage(7);
     focusExactEntity('telemetry:window');
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('8 / 9 · FAIL CLOSED');
+    stage = beginStage(8);
+    listSecurityFindings('info');
+    if (!(await pause(stage.durationMs))) return;
+
+    stage = beginStage(9);
     focusExactEntity('handler:payment');
-    if (!(await pause())) return;
+    if (!(await pause(stage.durationMs))) return;
 
-    setDemoStep('9 / 9 · FINAL EVIDENCE');
+    stage = beginStage(10);
+    setMode('Architecture');
+    focusExactEntity('agent:webmcp-review');
+    if (!(await pause(stage.durationMs))) return;
+
+    stage = beginStage(11);
+    setMode('Architecture');
     focusExactEntity('handler:lookup');
-    setDemoStep('DEMO COMPLETE · READ ONLY');
+    setConsoleState({ kind: 'summary' });
+    setLastAction('Guided rehearsal complete; five read-only WebMCP tools remain available to the agent');
+    if (!(await pause(stage.durationMs))) return;
+
+    setDemoProgress(100);
+    setDemoStep(`DEMO COMPLETE · ${DEMO_DURATION_LABEL} · READ ONLY`);
     setDemoRunning(false);
   }
 
@@ -889,6 +957,11 @@ export default function Home() {
   useEffect(() => () => {
     demoRun.current += 1;
   }, []);
+
+  useEffect(() => {
+    const timeline = consoleTimelineRef.current;
+    if (timeline) timeline.scrollTop = timeline.scrollHeight;
+  }, [agentEvents]);
 
   useEffect(() => {
     if (!document.modelContext?.registerTool) return;
@@ -1246,15 +1319,18 @@ export default function Home() {
             <div className="console-header">
               <div>
                 <span className="console-live"><i aria-hidden="true" /> AGENT CONSOLE</span>
-                <small>{demoStep}</small>
+                <span className="demo-status">
+                  <small>{demoStep}</small>
+                  <i aria-hidden="true"><b style={{ width: `${demoProgress}%` }} /></i>
+                </span>
               </div>
               <button className="demo-button" onClick={runFullDemo} disabled={demoRunning}>
-                {demoRunning ? 'DEMO RUNNING' : 'RUN FULL DEMO'} <span aria-hidden="true">▶</span>
+                {demoRunning ? 'GUIDED REHEARSAL RUNNING' : `RUN ${DEMO_DURATION_LABEL} GUIDED DEMO`} <span aria-hidden="true">▶</span>
               </button>
             </div>
 
             <div className="console-content">
-              <div className="console-timeline" aria-label="Tool invocation timeline">
+              <div ref={consoleTimelineRef} className="console-timeline" aria-label="Tool invocation timeline">
                 {agentEvents.length === 0 ? (
                   <div className="console-empty">
                     <span>READY</span>
@@ -1296,11 +1372,7 @@ export default function Home() {
                       <strong>{focused.label}</strong>
                       <code>{focused.id}</code>
                       <span className={`result-state ${focused.state}`}>{stateLabel(focused.state)}</span>
-                      <small>
-                        {focused.state === 'warning'
-                          ? 'Capability is declared; exact server-side enforcement evidence is not proven.'
-                          : 'The inspector and graph now share this exact source-backed entity.'}
-                      </small>
+                      <small>{focusExplanation(focused)}</small>
                     </div>
                   );
                 })()}
@@ -1357,6 +1429,20 @@ export default function Home() {
                       selected before/after: {consoleState.selectedBefore} / {consoleState.selectedAfter}
                       <b>SELECTION UNCHANGED · mutation: false</b>
                     </small>
+                  </div>
+                )}
+
+                {consoleState.kind === 'summary' && (
+                  <div className="result-summary">
+                    <p>JURY SUMMARY · SHARED ARCHITECTURE WORKSPACE</p>
+                    <strong>People and agents investigate the same exact, evidence-aware graph.</strong>
+                    <div>
+                      <span><b>5 / 5</b> read-only tools exercised</span>
+                      <span><b>1</b> bypass exposed</span>
+                      <span><b>3</b> uncertainty states preserved</span>
+                      <span><b>0</b> mutations allowed</span>
+                    </div>
+                    <small>Isolated namespace · Apache-2.0 core · no DB, shell, deploy or production controls</small>
                   </div>
                 )}
               </div>

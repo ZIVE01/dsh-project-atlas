@@ -37,12 +37,28 @@ test('exact entity IDs and uncertainty remain explicit', () => {
 });
 
 test('guided demo exposes path, evidence comparison and fail-closed feedback', () => {
-  assert.match(source, /RUN FULL DEMO/);
+  assert.match(source, /RUN \$\{DEMO_DURATION_LABEL\} GUIDED DEMO/);
   assert.match(source, /className="result-deny" role="alert"/);
   assert.match(source, /SELECTION UNCHANGED · mutation: false/);
   assert.match(source, /UNKNOWN, BLIND SPOT and REVIEW preserved/);
   assert.match(source, /highlightedEdgeIds\.includes\(graphEdgeKey\(edge\)\)/);
   assert.match(source, /LOCAL SAFETY REHEARSAL/);
+  assert.match(source, /kind: 'summary'/);
+  assert.match(source, /5 \/ 5<\/b> read-only tools exercised/);
+  assert.match(source, /focusExactEntity\('capability:catalog-write'\)/);
+  assert.match(source, /focusExactEntity\('agent:webmcp-review'\)/);
+  assert.match(source, /listSecurityFindings\('info'\)/);
+  assert.match(source, /consoleTimelineRef\.current/);
+});
+
+test('guided rehearsal is timed to 2:45 with an under-three-minute safety margin', () => {
+  const stageBlock = source.match(/const DEMO_STAGES = \[(.*?)\] as const;/s)?.[1] ?? '';
+  const durations = [...stageBlock.matchAll(/durationMs: ([\d_]+)/g)]
+    .map((match) => Number(match[1].replaceAll('_', '')));
+  assert.equal(durations.length, 12);
+  assert.equal(durations.reduce((total, duration) => total + duration, 0), 165_000);
+  assert.match(source, /const DEMO_DURATION_LABEL = '2:45';/);
+  assert.match(source, /DEMO COMPLETE · \$\{DEMO_DURATION_LABEL\} · READ ONLY/);
 });
 
 test('capability map keeps domains, paths and bypasses explicit', () => {
