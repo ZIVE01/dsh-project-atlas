@@ -71,13 +71,16 @@ isolated temporary filesystem.
 
 ## Required post-deployment browser verification
 
-Recorded on 2026-09-01 against Sites version 6, source commit
-`d6d8556039f02beb48e0d2d75791d695a34e7d97`, at
+Recorded on 2026-09-01 against Sites version 7, source commit
+`8a3954497e84de0b9c98b9846c87c17a5e888894`, at
 <https://dsh-project-atlas.dr-satim.chatgpt.site>:
 
 - [x] Public deployment succeeded and the live route loaded normally.
 - [x] ChatGPT built-in browser reported **WebMCP connected**.
 - [x] Exactly five expected tools were discovered.
+- [x] Every real WebMCP state changed the prominent `WHAT THIS PROVES` card;
+      exact focus, bounded path, BYPASS, comparison, blind spot, read-only
+      boundary, missing proof and denial states were checked.
 - [x] The public UI exposed the deterministic 2:45 guided rehearsal with 12
       timed stages, progress, automatic event following, and a jury summary.
 - [x] The exact deployed commit completed the full 2:45 rehearsal locally at
@@ -89,12 +92,15 @@ Recorded on 2026-09-01 against Sites version 6, source commit
       search-to-catalog route.
 - [x] Two high-severity findings included the explicit BYPASS.
 - [x] Layer comparison preserved UNKNOWN, BLIND SPOT, and REVIEW.
-- [x] Unknown `handler:payment` was denied without changing the selected
-      `Catalog update` node.
+- [x] Unknown `handler:payment` returned `deny` with `mutation: false` without
+      changing the selected `Lookup handler` node; the visible card explained
+      `Unknown means deny`.
 - [x] Map restored all 19 nodes and 20 relations with zero dimmed nodes.
 - [x] The public build matched its 1816 × 1135 browser viewport exactly;
       effective 1366 × 768 and 1440 × 900 local checks also had no
       document-level scroll.
+- [x] At effective 1366 × 768 and 1440 × 900 the explanation card remained
+      above the fold and the inspector required no internal scroll.
 - [x] Browser warning/error console was empty after the tool sequence.
 
 Chrome 149+ can be checked separately with
