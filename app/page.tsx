@@ -1,10 +1,29 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type WheelEvent as ReactWheelEvent,
+} from 'react';
 import fixtureArtifact from '@/data/orchid-graph.v1.json';
 
 type ViewMode = 'Architecture' | 'Now' | 'Deviations' | 'History';
+type GraphPresentation = 'map' | 'path';
 type NodeState = 'verified' | 'unknown' | 'blind-spot' | 'warning';
+type EdgeState = NodeState | 'bypass';
+type GraphLayer = 'Interface' | 'Boundary' | 'Policy' | 'Runtime' | 'Data' | 'Evidence';
+type GraphDomain =
+  | 'Experience'
+  | 'Delivery'
+  | 'Capability control'
+  | 'Execution'
+  | 'Owned data'
+  | 'Evidence';
+
+type GraphPosition = { x: number; y: number };
 
 type GraphNode = {
   id: string;
@@ -12,7 +31,8 @@ type GraphNode = {
   type: string;
   label: string;
   subtitle: string;
-  layer: 'Interface' | 'Boundary' | 'Policy' | 'Runtime' | 'Evidence';
+  layer: GraphLayer;
+  domain: GraphDomain;
   state: NodeState;
   confidence: string;
   provenance: string;
@@ -24,7 +44,8 @@ type GraphEdge = {
   from: string;
   to: string;
   label: string;
-  state: NodeState;
+  state: EdgeState;
+  bend?: number;
 };
 
 type Finding = {
@@ -73,6 +94,12 @@ type ModelContext = {
   ) => Promise<void> | void;
 };
 
+declare global {
+  interface Document {
+    modelContext: ModelContext;
+  }
+}
+
 const nodes: GraphNode[] = [
   {
     id: 'screen:project-search',
@@ -81,11 +108,54 @@ const nodes: GraphNode[] = [
     label: 'Project search',
     subtitle: 'Human workspace',
     layer: 'Interface',
+    domain: 'Experience',
     state: 'verified',
     confidence: '1.00',
     provenance: 'overlay/ui/search-screen.synthetic · L12–48',
     x: 7,
-    y: 18,
+    y: 14,
+  },
+  {
+    id: 'screen:catalog-board',
+    shortId: 'UI-03',
+    type: 'SCREEN',
+    label: 'Catalog board',
+    subtitle: 'Second read consumer',
+    layer: 'Interface',
+    domain: 'Experience',
+    state: 'verified',
+    confidence: '0.98',
+    provenance: 'overlay/ui/catalog-board.synthetic · L9–37',
+    x: 7,
+    y: 40,
+  },
+  {
+    id: 'screen:catalog-admin',
+    shortId: 'UI-07',
+    type: 'SCREEN',
+    label: 'Catalog admin',
+    subtitle: 'Mutation surface',
+    layer: 'Interface',
+    domain: 'Experience',
+    state: 'verified',
+    confidence: '0.96',
+    provenance: 'overlay/ui/catalog-admin.synthetic · L16–61',
+    x: 7,
+    y: 66,
+  },
+  {
+    id: 'agent:webmcp-review',
+    shortId: 'AG-05',
+    type: 'AGENT',
+    label: 'WebMCP reviewer',
+    subtitle: 'Read-only collaborator',
+    layer: 'Interface',
+    domain: 'Experience',
+    state: 'verified',
+    confidence: '1.00',
+    provenance: 'overlay/agent/webmcp-review.synthetic · #/five-tools',
+    x: 9,
+    y: 90,
   },
   {
     id: 'route:search',
@@ -94,11 +164,12 @@ const nodes: GraphNode[] = [
     label: '/search',
     subtitle: 'Browser boundary',
     layer: 'Boundary',
+    domain: 'Delivery',
     state: 'verified',
     confidence: '1.00',
     provenance: 'overlay/ui/router.synthetic · L8–15',
-    x: 28,
-    y: 18,
+    x: 23,
+    y: 13,
   },
   {
     id: 'api:lookup',
@@ -107,11 +178,54 @@ const nodes: GraphNode[] = [
     label: 'GET /lookup',
     subtitle: 'Bounded query',
     layer: 'Boundary',
+    domain: 'Delivery',
     state: 'verified',
     confidence: '0.98',
     provenance: 'overlay/service/lookup-api.synthetic · L20–55',
-    x: 50,
-    y: 18,
+    x: 35,
+    y: 27,
+  },
+  {
+    id: 'route:catalog-admin',
+    shortId: 'RT-09',
+    type: 'ROUTE',
+    label: '/catalog/admin',
+    subtitle: 'Approved mutation route',
+    layer: 'Boundary',
+    domain: 'Delivery',
+    state: 'verified',
+    confidence: '0.99',
+    provenance: 'overlay/ui/catalog-router.synthetic · L31–49',
+    x: 23,
+    y: 56,
+  },
+  {
+    id: 'api:catalog-update',
+    shortId: 'API-08',
+    type: 'API',
+    label: 'PATCH /catalog',
+    subtitle: 'Bounded command',
+    layer: 'Boundary',
+    domain: 'Delivery',
+    state: 'verified',
+    confidence: '0.97',
+    provenance: 'overlay/service/catalog-update.synthetic · L11–63',
+    x: 35,
+    y: 68,
+  },
+  {
+    id: 'tool:compare-layers',
+    shortId: 'TL-05',
+    type: 'TOOL',
+    label: 'Compare layers',
+    subtitle: 'Structured WebMCP call',
+    layer: 'Boundary',
+    domain: 'Delivery',
+    state: 'verified',
+    confidence: '1.00',
+    provenance: 'overlay/webmcp/compare-layers.synthetic · #/tool',
+    x: 29,
+    y: 90,
   },
   {
     id: 'capability:catalog-read',
@@ -120,11 +234,40 @@ const nodes: GraphNode[] = [
     label: 'catalog.read',
     subtitle: 'Read-only policy',
     layer: 'Policy',
+    domain: 'Capability control',
     state: 'verified',
     confidence: '1.00',
     provenance: 'overlay/policy/catalog-read.synthetic · #/catalog.read',
-    x: 72,
-    y: 18,
+    x: 51,
+    y: 27,
+  },
+  {
+    id: 'capability:catalog-write',
+    shortId: 'CAP-24',
+    type: 'CAPABILITY',
+    label: 'catalog.write',
+    subtitle: 'Mutation policy',
+    layer: 'Policy',
+    domain: 'Capability control',
+    state: 'verified',
+    confidence: '1.00',
+    provenance: 'overlay/policy/catalog-write.synthetic · #/catalog.write',
+    x: 51,
+    y: 64,
+  },
+  {
+    id: 'capability:audit-read',
+    shortId: 'CAP-31',
+    type: 'CAPABILITY',
+    label: 'audit.read',
+    subtitle: 'Evidence policy',
+    layer: 'Policy',
+    domain: 'Capability control',
+    state: 'verified',
+    confidence: '1.00',
+    provenance: 'overlay/policy/audit-read.synthetic · #/audit.read',
+    x: 51,
+    y: 90,
   },
   {
     id: 'handler:lookup',
@@ -133,11 +276,40 @@ const nodes: GraphNode[] = [
     label: 'Lookup handler',
     subtitle: 'Server enforcement',
     layer: 'Runtime',
+    domain: 'Execution',
     state: 'warning',
     confidence: '0.64',
     provenance: 'overlay/evidence/missing-server-enforcement.synthetic',
-    x: 72,
-    y: 54,
+    x: 68,
+    y: 27,
+  },
+  {
+    id: 'handler:catalog-update',
+    shortId: 'HD-06',
+    type: 'HANDLER',
+    label: 'Catalog update',
+    subtitle: 'Owner command handler',
+    layer: 'Runtime',
+    domain: 'Execution',
+    state: 'verified',
+    confidence: '0.97',
+    provenance: 'overlay/runtime/catalog-update.synthetic · L44–96',
+    x: 68,
+    y: 63,
+  },
+  {
+    id: 'handler:audit-query',
+    shortId: 'HD-11',
+    type: 'HANDLER',
+    label: 'Audit query',
+    subtitle: 'Minimized evidence view',
+    layer: 'Runtime',
+    domain: 'Execution',
+    state: 'verified',
+    confidence: '0.95',
+    provenance: 'overlay/runtime/audit-query.synthetic · L20–72',
+    x: 68,
+    y: 90,
   },
   {
     id: 'store:catalog',
@@ -145,12 +317,27 @@ const nodes: GraphNode[] = [
     type: 'STORE',
     label: 'Catalog store',
     subtitle: 'Owned data',
-    layer: 'Runtime',
+    layer: 'Data',
+    domain: 'Owned data',
     state: 'verified',
     confidence: '0.97',
     provenance: 'overlay/storage/catalog.synthetic · L1–32',
-    x: 50,
-    y: 54,
+    x: 86,
+    y: 43,
+  },
+  {
+    id: 'store:audit-log',
+    shortId: 'DB-05',
+    type: 'STORE',
+    label: 'Audit log',
+    subtitle: 'Append-only evidence',
+    layer: 'Data',
+    domain: 'Owned data',
+    state: 'verified',
+    confidence: '0.94',
+    provenance: 'overlay/storage/audit-log.synthetic · L1–47',
+    x: 86,
+    y: 71,
   },
   {
     id: 'audit:query',
@@ -159,11 +346,12 @@ const nodes: GraphNode[] = [
     label: 'Query receipt',
     subtitle: 'Minimized evidence',
     layer: 'Evidence',
+    domain: 'Evidence',
     state: 'unknown',
     confidence: '0.42',
     provenance: 'overlay/evidence/observed-search.synthetic · partial',
-    x: 28,
-    y: 54,
+    x: 86,
+    y: 16,
   },
   {
     id: 'telemetry:window',
@@ -172,25 +360,47 @@ const nodes: GraphNode[] = [
     label: 'Runtime window',
     subtitle: 'Coverage 72%',
     layer: 'Evidence',
+    domain: 'Evidence',
     state: 'blind-spot',
     confidence: '0.31',
     provenance: 'overlay/evidence/telemetry-gap.synthetic',
-    x: 7,
-    y: 54,
+    x: 90,
+    y: 90,
   },
 ];
 
 const edges: GraphEdge[] = [
   { from: 'screen:project-search', to: 'route:search', label: 'navigates', state: 'verified' },
+  { from: 'screen:catalog-board', to: 'route:search', label: 'reuses', state: 'verified', bend: 6 },
   { from: 'route:search', to: 'api:lookup', label: 'requests', state: 'verified' },
   { from: 'api:lookup', to: 'capability:catalog-read', label: 'requires', state: 'verified' },
   { from: 'capability:catalog-read', to: 'handler:lookup', label: 'guards?', state: 'warning' },
   { from: 'handler:lookup', to: 'store:catalog', label: 'reads', state: 'verified' },
-  { from: 'store:catalog', to: 'audit:query', label: 'records', state: 'unknown' },
-  { from: 'audit:query', to: 'telemetry:window', label: 'observed by', state: 'blind-spot' },
+  { from: 'store:catalog', to: 'audit:query', label: 'records?', state: 'unknown', bend: 8 },
+  { from: 'audit:query', to: 'telemetry:window', label: 'observed by', state: 'blind-spot', bend: 10 },
+  { from: 'screen:catalog-admin', to: 'route:catalog-admin', label: 'navigates', state: 'verified' },
+  { from: 'route:catalog-admin', to: 'api:catalog-update', label: 'requests', state: 'verified' },
+  { from: 'api:catalog-update', to: 'capability:catalog-write', label: 'requires', state: 'verified' },
+  { from: 'capability:catalog-write', to: 'handler:catalog-update', label: 'guards', state: 'verified' },
+  { from: 'handler:catalog-update', to: 'store:catalog', label: 'writes', state: 'verified' },
+  { from: 'handler:catalog-update', to: 'store:audit-log', label: 'audits', state: 'verified' },
+  { from: 'agent:webmcp-review', to: 'tool:compare-layers', label: 'invokes', state: 'verified' },
+  { from: 'tool:compare-layers', to: 'capability:audit-read', label: 'requires', state: 'verified' },
+  { from: 'capability:audit-read', to: 'handler:audit-query', label: 'guards', state: 'verified' },
+  { from: 'handler:audit-query', to: 'store:audit-log', label: 'reads', state: 'verified' },
+  { from: 'store:audit-log', to: 'telemetry:window', label: 'projects', state: 'verified' },
+  { from: 'screen:catalog-admin', to: 'handler:catalog-update', label: 'BYPASS', state: 'bypass', bend: 28 },
 ];
 
 const findings: Finding[] = [
+  {
+    id: 'DSH-080',
+    severity: 'high',
+    title: 'Legacy mutation bypasses capability control',
+    detail: 'A direct UI-to-handler path skips the approved route, API, and catalog.write capability.',
+    nodeId: 'handler:catalog-update',
+    state: 'REVIEW',
+  },
   {
     id: 'DSH-101',
     severity: 'high',
@@ -218,13 +428,26 @@ const findings: Finding[] = [
 ];
 
 const modeCopy: Record<ViewMode, { eyebrow: string; title: string }> = {
-  Architecture: { eyebrow: 'EXPECTED LAYER', title: 'How the project is meant to work' },
+  Architecture: { eyebrow: 'SYSTEM MAP', title: 'Capabilities, consumers and trust boundaries' },
   Now: { eyebrow: 'DEPLOYED + OBSERVED', title: 'What can be proven right now' },
   Deviations: { eyebrow: 'DIFF MODE', title: 'Where reality diverges from intent' },
   History: { eyebrow: 'IMMUTABLE TIMELINE', title: 'How the architecture changed' },
 };
 
+const layerOrder: GraphLayer[] = ['Interface', 'Boundary', 'Policy', 'Runtime', 'Data', 'Evidence'];
+const domainClusters = [
+  { id: 'surfaces', label: 'SURFACES', left: 1, top: 4, width: 15, height: 92 },
+  { id: 'delivery', label: 'ROUTES + API', left: 18, top: 4, width: 23, height: 92 },
+  { id: 'capabilities', label: 'CAPABILITY CONTROL', left: 43, top: 4, width: 16, height: 92 },
+  { id: 'handlers', label: 'BACKEND OWNERS', left: 60.5, top: 4, width: 15, height: 92 },
+  { id: 'data', label: 'OWNED DATA', left: 77, top: 30, width: 20, height: 50 },
+  { id: 'audit', label: 'AUDIT CONTRACT', left: 77, top: 4, width: 20, height: 23 },
+  { id: 'observed', label: 'OBSERVED EVIDENCE', left: 79, top: 83, width: 19, height: 15 },
+] as const;
+
 const DEMO_STEP_MS = 4000;
+const MIN_GRAPH_SCALE = 0.75;
+const MAX_GRAPH_SCALE = 1.4;
 
 function stateLabel(state: NodeState) {
   if (state === 'blind-spot') return 'BLIND SPOT';
@@ -248,7 +471,9 @@ function findGraphPath(fromEntityId: string, toEntityId: string) {
   while (queue.length > 0) {
     const current = queue.shift()!;
     if (current.entityId === toEntityId) return current;
-    for (const edge of edges.filter((candidate) => candidate.from === current.entityId)) {
+    for (const edge of edges.filter(
+      (candidate) => candidate.from === current.entityId && candidate.state !== 'bypass',
+    )) {
       if (visited.has(edge.to)) continue;
       visited.add(edge.to);
       queue.push({
@@ -261,6 +486,35 @@ function findGraphPath(fromEntityId: string, toEntityId: string) {
   return null;
 }
 
+function graphPosition(node: GraphNode, presentation: GraphPresentation, pathEntities: string[]): GraphPosition {
+  if (presentation === 'map') return { x: node.x, y: node.y };
+  const index = pathEntities.indexOf(node.id);
+  const spacing = pathEntities.length > 1 ? 82 / (pathEntities.length - 1) : 0;
+  return { x: 9 + Math.max(0, index) * spacing, y: 48 };
+}
+
+function graphEdgePath(edge: GraphEdge, from: GraphPosition, to: GraphPosition) {
+  const vertical = Math.abs(to.x - from.x) < 6;
+  if (vertical) {
+    const offset = edge.bend ?? 7;
+    return `M ${from.x} ${from.y} C ${from.x + offset} ${from.y}, ${to.x + offset} ${to.y}, ${to.x} ${to.y}`;
+  }
+  const midpoint = (from.x + to.x) / 2;
+  const bend = edge.bend ?? 0;
+  return `M ${from.x} ${from.y} C ${midpoint} ${from.y + bend}, ${midpoint} ${to.y + bend}, ${to.x} ${to.y}`;
+}
+
+function graphEdgeLabelPosition(edge: GraphEdge, from: GraphPosition, to: GraphPosition): GraphPosition {
+  return {
+    x: (from.x + to.x) / 2,
+    y: (from.y + to.y) / 2 + (edge.bend ?? 0) * 0.55,
+  };
+}
+
+function clampGraphScale(value: number) {
+  return Math.min(MAX_GRAPH_SCALE, Math.max(MIN_GRAPH_SCALE, value));
+}
+
 function graphEdgeKey(edge: GraphEdge) {
   return `${edge.from}->${edge.to}`;
 }
@@ -271,9 +525,10 @@ function waitForDemo(ms: number) {
 
 export default function Home() {
   const [mode, setMode] = useState<ViewMode>('Architecture');
-  const [selectedId, setSelectedId] = useState(nodes[4].id);
+  const [graphPresentation, setGraphPresentation] = useState<GraphPresentation>('map');
+  const [selectedId, setSelectedId] = useState('handler:lookup');
   const [query, setQuery] = useState('');
-  const [activeLayer, setActiveLayer] = useState<GraphNode['layer'] | 'All'>('All');
+  const [activeLayer, setActiveLayer] = useState<GraphLayer | 'All'>('All');
   const [toolState, setToolState] = useState<'connected' | 'preview'>('preview');
   const [lastAction, setLastAction] = useState('Human selected Lookup handler');
   const [highlightedNodeIds, setHighlightedNodeIds] = useState<string[]>([]);
@@ -282,11 +537,44 @@ export default function Home() {
   const [agentEvents, setAgentEvents] = useState<AgentEvent[]>([]);
   const [demoRunning, setDemoRunning] = useState(false);
   const [demoStep, setDemoStep] = useState('READY');
+  const [camera, setCamera] = useState({ scale: 1, x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
   const selectedIdRef = useRef(selectedId);
   const eventSequence = useRef(0);
   const demoRun = useRef(0);
+  const dragState = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  } | null>(null);
 
   const selected = nodes.find((node) => node.id === selectedId) ?? nodes[0];
+  const canonicalPath = useMemo(
+    () => findGraphPath('screen:project-search', 'store:catalog')!,
+    [],
+  );
+  const activePath = consoleState.kind === 'path' ? consoleState : canonicalPath;
+  const presentedNodes = graphPresentation === 'path'
+    ? nodes.filter((node) => activePath.entities.includes(node.id))
+    : nodes;
+  const presentedEdges = graphPresentation === 'path' ? activePath.relations : edges;
+  const selectedNeighborhood = useMemo(() => {
+    const related = new Set([selected.id]);
+    for (const edge of edges) {
+      if (edge.from === selected.id || edge.to === selected.id) {
+        related.add(edge.from);
+        related.add(edge.to);
+      }
+    }
+    return related;
+  }, [selected.id]);
+  const showSelectedNeighborhood = graphPresentation === 'map' && consoleState.kind === 'focus';
+  const incomingRelations = edges.filter((edge) => edge.to === selected.id);
+  const outgoingRelations = edges.filter((edge) => edge.from === selected.id);
+  const selectedHasBypass = [...incomingRelations, ...outgoingRelations]
+    .some((edge) => edge.state === 'bypass');
   const matchingNodes = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return new Set(
@@ -300,6 +588,72 @@ export default function Home() {
   function setSelectedNode(nodeId: string) {
     selectedIdRef.current = nodeId;
     setSelectedId(nodeId);
+  }
+
+  function resetGraphCamera() {
+    setCamera({ scale: 1, x: 0, y: 0 });
+  }
+
+  function openMap(source = 'Human') {
+    setGraphPresentation('map');
+    resetGraphCamera();
+    setHighlightedNodeIds([]);
+    setHighlightedEdgeIds([]);
+    setConsoleState({ kind: 'overview' });
+    setLastAction(`${source} opened the complete capability map`);
+  }
+
+  function openCanonicalPath() {
+    setGraphPresentation('path');
+    resetGraphCamera();
+    setSelectedNode(canonicalPath.entities.at(-1) ?? 'store:catalog');
+    setHighlightedNodeIds(canonicalPath.entities);
+    setHighlightedEdgeIds(canonicalPath.relations.map(graphEdgeKey));
+    setConsoleState({ kind: 'path', entities: canonicalPath.entities, relations: canonicalPath.relations });
+    setLastAction('Human opened the bounded search-to-data path');
+  }
+
+  function changeGraphScale(delta: number) {
+    setCamera((current) => ({ ...current, scale: clampGraphScale(current.scale + delta) }));
+  }
+
+  function handleGraphWheel(event: ReactWheelEvent<HTMLDivElement>) {
+    event.preventDefault();
+    const direction = event.deltaY > 0 ? -0.08 : 0.08;
+    changeGraphScale(direction);
+  }
+
+  function handleGraphPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    const target = event.target;
+    if (target instanceof Element && target.closest('button, input, .graph-legend, .graph-edge-label')) return;
+    dragState.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: camera.x,
+      originY: camera.y,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDragging(true);
+  }
+
+  function handleGraphPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = dragState.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    setCamera((current) => ({
+      ...current,
+      x: drag.originX + event.clientX - drag.startX,
+      y: drag.originY + event.clientY - drag.startY,
+    }));
+  }
+
+  function handleGraphPointerEnd(event: ReactPointerEvent<HTMLDivElement>) {
+    if (dragState.current?.pointerId !== event.pointerId) return;
+    dragState.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setDragging(false);
   }
 
   function recordAgentEvent(toolName: string, decision: AgentDecision, summary: string) {
@@ -334,6 +688,8 @@ export default function Home() {
       graphSha256: fixtureArtifact.graphSha256,
       scope: 'synthetic-read-only',
     };
+    setGraphPresentation('map');
+    resetGraphCamera();
     setConsoleState({ kind: 'overview' });
     setHighlightedNodeIds([]);
     setHighlightedEdgeIds([]);
@@ -357,6 +713,8 @@ export default function Home() {
       recordAgentEvent('focus_graph_entity', 'deny', `${entityId} rejected; selection unchanged`);
       return { decision: 'deny', reason: 'unknown-exact-entity-id', mutation: false };
     }
+    setGraphPresentation('map');
+    resetGraphCamera();
     setSelectedNode(node.id);
     setHighlightedNodeIds([node.id]);
     setHighlightedEdgeIds([]);
@@ -380,6 +738,8 @@ export default function Home() {
       return { decision: 'unknown', reason: 'no-forward-source-backed-path' };
     }
     setSelectedNode(to);
+    setGraphPresentation('path');
+    resetGraphCamera();
     setHighlightedNodeIds(path.entities);
     setHighlightedEdgeIds(path.relations.map(graphEdgeKey));
     setConsoleState({ kind: 'path', entities: path.entities, relations: path.relations });
@@ -401,6 +761,8 @@ export default function Home() {
   function listSecurityFindings(severity: string) {
     const result = findings.filter((finding) => severity === 'all' || finding.severity === severity);
     setMode('Deviations');
+    setGraphPresentation('map');
+    resetGraphCamera();
     if (result[0]) {
       setSelectedNode(result[0].nodeId);
       setHighlightedNodeIds(result.map((finding) => finding.nodeId));
@@ -414,6 +776,8 @@ export default function Home() {
 
   function compareArchitectureLayers(scope: string) {
     setMode('Deviations');
+    setGraphPresentation('map');
+    resetGraphCamera();
     setHighlightedNodeIds(findings.map((finding) => finding.nodeId));
     setHighlightedEdgeIds([]);
     setConsoleState({ kind: 'comparison', scope });
@@ -452,7 +816,7 @@ export default function Home() {
 
     setDemoStep('3 / 9 · BOUNDED PATH');
     const traced = traceArchitecturePath('screen:project-search', 'store:catalog');
-    if ('entities' in traced) {
+    if (Array.isArray(traced.entities)) {
       for (const entityId of traced.entities) {
         if (!continueDemo()) return;
         setSelectedNode(entityId);
@@ -510,8 +874,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const modelContext = (document as Document & { modelContext?: ModelContext }).modelContext;
-    if (!modelContext?.registerTool) return;
+    if (!document.modelContext?.registerTool) return;
 
     const controller = new AbortController();
     const exactNodeIds = nodes.map((node) => node.id);
@@ -593,7 +956,7 @@ export default function Home() {
       },
     ];
 
-    Promise.all(tools.map((tool) => modelContext.registerTool(tool, { signal: controller.signal })))
+    Promise.all(tools.map((tool) => document.modelContext.registerTool(tool, { signal: controller.signal })))
       .then(() => setToolState('connected'))
       .catch(() => setToolState('preview'));
 
@@ -675,21 +1038,15 @@ export default function Home() {
 
           <div className="rail-section">
             <p className="rail-label">LAYERS</p>
-            {[
-              ['Interface', 1],
-              ['Boundary', 2],
-              ['Policy', 1],
-              ['Runtime', 2],
-              ['Evidence', 2],
-            ].map(([label, count]) => (
+            {layerOrder.map((label) => (
               <button
                 className={`layer-row ${activeLayer === label ? 'active' : ''}`}
-                key={String(label)}
-                onClick={() => setActiveLayer(activeLayer === label ? 'All' : label as GraphNode['layer'])}
+                key={label}
+                onClick={() => setActiveLayer(activeLayer === label ? 'All' : label)}
                 aria-pressed={activeLayer === label}
               >
-                <span><i className={`layer-dot ${String(label).toLowerCase()}`} />{label}</span>
-                <b>{count}</b>
+                <span><i className={`layer-dot ${label.toLowerCase()}`} />{label}</span>
+                <b>{nodes.filter((node) => node.layer === label).length}</b>
               </button>
             ))}
           </div>
@@ -722,64 +1079,149 @@ export default function Home() {
           <div className="graph-toolbar">
             <div className="graph-title">
               <span className="pulse-dot" aria-hidden="true" />
-              <span><small>SYNTHETIC ARCHITECTURAL OVERLAY</small><strong>Search capability chain</strong></span>
+              <span>
+                <small>SYNTHETIC ARCHITECTURAL OVERLAY</small>
+                <strong>
+                  {graphPresentation === 'map'
+                    ? 'Capability map · consumers, owners and bypasses'
+                    : 'Bounded path · interface to owned data'}
+                </strong>
+              </span>
             </div>
-            <div className="graph-stats">
-              <span><b>{nodes.length}/{fixtureArtifact.graph.nodes.length}</b> entities</span>
-              <span><b>{edges.length}/{fixtureArtifact.graph.edges.length}</b> relations</span>
-              <span className="attention"><b>{findings.length}</b> findings</span>
+            <div className="graph-toolbar-actions">
+              <div className="presentation-toggle" aria-label="Graph presentation">
+                <button
+                  className={graphPresentation === 'map' ? 'active' : ''}
+                  onClick={() => openMap()}
+                  aria-pressed={graphPresentation === 'map'}
+                >
+                  MAP
+                </button>
+                <button
+                  className={graphPresentation === 'path' ? 'active' : ''}
+                  onClick={openCanonicalPath}
+                  aria-pressed={graphPresentation === 'path'}
+                >
+                  PATH
+                </button>
+              </div>
+              <div className="graph-stats">
+                <span><b>{nodes.length}</b> entities</span>
+                <span><b>{edges.length}</b> relations</span>
+                <span className="attention"><b>{findings.length}</b> findings</span>
+              </div>
             </div>
           </div>
 
-          <div className="graph-canvas">
+          <div
+            className={`graph-canvas ${dragging ? 'dragging' : ''}`}
+            onWheel={handleGraphWheel}
+            onPointerDown={handleGraphPointerDown}
+            onPointerMove={handleGraphPointerMove}
+            onPointerUp={handleGraphPointerEnd}
+            onPointerCancel={handleGraphPointerEnd}
+          >
             <div className="grid-texture" aria-hidden="true" />
-            {edges.map((edge, index) => {
-              const from = nodes.find((node) => node.id === edge.from)!;
-              const to = nodes.find((node) => node.id === edge.to)!;
-              const horizontal = from.y === to.y;
-              const left = Math.min(from.x, to.x) + 11;
-              const top = Math.min(from.y, to.y) + 8;
-              const width = horizontal ? Math.abs(to.x - from.x) - 10 : 2;
-              const height = horizontal ? 2 : Math.abs(to.y - from.y) - 7;
-              return (
-                <span
-                  className={`graph-edge ${edge.state} ${horizontal ? 'horizontal' : 'vertical'} ${highlightedEdgeIds.includes(graphEdgeKey(edge)) ? 'active-path' : ''}`}
-                  key={`${edge.from}-${edge.to}`}
-                  style={{ left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` }}
-                  title={edge.label}
+            <div
+              className={`graph-world ${graphPresentation}`}
+              style={{ transform: `translate(${camera.x}px, ${camera.y}px) scale(${camera.scale})` }}
+            >
+              {graphPresentation === 'map' && domainClusters.map((cluster) => (
+                <div
+                  className={`domain-cluster ${cluster.id}`}
+                  key={cluster.id}
+                  style={{
+                    left: `${cluster.left}%`,
+                    top: `${cluster.top}%`,
+                    width: `${cluster.width}%`,
+                    height: `${cluster.height}%`,
+                  }}
                   aria-hidden="true"
                 >
-                  {index < 4 && <small>{edge.label}</small>}
-                </span>
-              );
-            })}
+                  <span>{cluster.label}</span>
+                </div>
+              ))}
 
-            {nodes.map((node) => {
-              const dimmed = !matchingNodes.has(node.id);
-              return (
-                <button
-                  key={node.id}
-                  className={`graph-node ${node.state} ${selected.id === node.id ? 'selected' : ''} ${highlightedNodeIds.includes(node.id) ? 'active-path' : ''} ${dimmed ? 'dimmed' : ''}`}
-                  style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                  onClick={() => focusNode(node.id)}
-                  aria-pressed={selected.id === node.id}
-                >
-                  <span className="node-topline">
-                    <small>{node.type}</small>
-                    <i aria-hidden="true" />
-                  </span>
-                  <strong>{node.label}</strong>
-                  <span>{node.subtitle}</span>
-                  <em>{node.shortId}</em>
-                </button>
-              );
-            })}
+              <svg className="graph-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                {presentedEdges.map((edge) => {
+                  const fromNode = nodes.find((node) => node.id === edge.from)!;
+                  const toNode = nodes.find((node) => node.id === edge.to)!;
+                  const from = graphPosition(fromNode, graphPresentation, activePath.entities);
+                  const to = graphPosition(toNode, graphPresentation, activePath.entities);
+                  const active = graphPresentation === 'path' || highlightedEdgeIds.includes(graphEdgeKey(edge));
+                  return (
+                    <path
+                      className={`graph-link ${edge.state} ${active ? 'active-path' : ''}`}
+                      d={graphEdgePath(edge, from, to)}
+                      key={graphEdgeKey(edge)}
+                      vectorEffect="non-scaling-stroke"
+                    >
+                      <title>{`${edge.from} ${edge.label} ${edge.to}`}</title>
+                    </path>
+                  );
+                })}
+              </svg>
+
+              {presentedEdges
+                .filter((edge) => edge.state === 'bypass' || edge.state === 'warning')
+                .map((edge) => {
+                  const fromNode = nodes.find((node) => node.id === edge.from)!;
+                  const toNode = nodes.find((node) => node.id === edge.to)!;
+                  const from = graphPosition(fromNode, graphPresentation, activePath.entities);
+                  const to = graphPosition(toNode, graphPresentation, activePath.entities);
+                  const labelPosition = graphEdgeLabelPosition(edge, from, to);
+                  return (
+                    <span
+                      className={`graph-edge-label ${edge.state}`}
+                      key={`label-${graphEdgeKey(edge)}`}
+                      style={{ left: `${labelPosition.x}%`, top: `${labelPosition.y}%` }}
+                    >
+                      {edge.label}
+                    </span>
+                  );
+                })}
+
+              {presentedNodes.map((node) => {
+                const position = graphPosition(node, graphPresentation, activePath.entities);
+                const dimmed = !matchingNodes.has(node.id)
+                  || (showSelectedNeighborhood && !selectedNeighborhood.has(node.id));
+                const onPath = graphPresentation === 'path' || highlightedNodeIds.includes(node.id);
+                return (
+                  <button
+                    key={node.id}
+                    className={`graph-node ${node.state} ${selected.id === node.id ? 'selected' : ''} ${onPath ? 'active-path' : ''} ${dimmed ? 'dimmed' : ''}`}
+                    style={{ left: `${position.x}%`, top: `${position.y}%` }}
+                    onClick={() => focusNode(node.id)}
+                    aria-pressed={selected.id === node.id}
+                    aria-label={`${node.type}: ${node.label}. ${stateLabel(node.state)}.`}
+                  >
+                    <span className="node-topline">
+                      <small>{node.type}</small>
+                      <i aria-hidden="true" />
+                    </span>
+                    <strong>{node.label}</strong>
+                    <span>{node.subtitle}</span>
+                    <em>{node.shortId}</em>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="graph-camera-controls" aria-label="Graph zoom controls">
+              <button onClick={() => changeGraphScale(-0.1)} aria-label="Zoom out">−</button>
+              <button onClick={resetGraphCamera} className="fit-button">FIT</button>
+              <span>{Math.round(camera.scale * 100)}%</span>
+              <button onClick={() => changeGraphScale(0.1)} aria-label="Zoom in">+</button>
+            </div>
+
+            <p className="graph-pan-hint">Drag empty space to pan · wheel to zoom</p>
 
             <div className="graph-legend">
               <span><i className="verified" />Verified</span>
+              <span><i className="warning" />Needs proof</span>
+              <span><i className="bypass" />Bypass</span>
               <span><i className="unknown" />Unknown</span>
               <span><i className="blind-spot" />Blind spot</span>
-              <span><i className="warning" />Needs proof</span>
             </div>
           </div>
 
@@ -918,7 +1360,7 @@ export default function Home() {
           </div>
 
           <div className="entity-identity">
-            <div className={`entity-icon ${selected.state}`}>{selected.shortId.split('-')[0]}</div>
+            <div className={`entity-icon ${selectedHasBypass ? 'bypass' : selected.state}`}>{selected.shortId.split('-')[0]}</div>
             <div>
               <p>{selected.type}</p>
               <h2>{selected.label}</h2>
@@ -926,13 +1368,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className={`state-banner ${selected.state}`}>
-            <span><i aria-hidden="true" />{stateLabel(selected.state)}</span>
-            <small>{selected.state === 'verified' ? 'Source-backed relation' : 'Not safe to promote'}</small>
+          <div className={`state-banner ${selectedHasBypass ? 'bypass' : selected.state}`}>
+            <span><i aria-hidden="true" />{selectedHasBypass ? 'BYPASS CONNECTED' : stateLabel(selected.state)}</span>
+            <small>{selectedHasBypass ? 'Review required' : selected.state === 'verified' ? 'Source-backed relation' : 'Not safe to promote'}</small>
           </div>
 
           <dl className="fact-list">
             <div><dt>Layer</dt><dd>{selected.layer}</dd></div>
+            <div><dt>Domain</dt><dd>{selected.domain}</dd></div>
+            <div><dt>Relations</dt><dd>{incomingRelations.length} in · {outgoingRelations.length} out</dd></div>
             <div><dt>Confidence</dt><dd>{selected.confidence}</dd></div>
             <div><dt>Namespace</dt><dd>synthetic:orchid</dd></div>
             <div><dt>Last observed</dt><dd>{selected.layer === 'Evidence' ? '14:22:08 UTC' : 'Not applicable'}</dd></div>
@@ -947,7 +1391,9 @@ export default function Home() {
           <div className="inspector-note">
             <span>Why this matters</span>
             <p>
-              {selected.state === 'warning'
+              {selectedHasBypass
+                ? 'This owner has a red direct path that bypasses the approved route, API and capability chain. Atlas keeps that exception visible.'
+                : selected.state === 'warning'
                 ? 'The policy is declared, but this handler needs exact server-side enforcement evidence before the chain can be trusted.'
                 : selected.state === 'blind-spot'
                   ? 'Missing observation is preserved as a blind spot. It is never treated as proof that a path does not exist.'

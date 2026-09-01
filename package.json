@@ -12,11 +12,12 @@
     "build": "vinext build",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "tsc --noEmit --incremental false",
     "test": "node --test ./test/*.test.mjs && npm --prefix packages/semantic-graph-core test",
     "generate:fixture": "node scripts/generate-public-fixture.mjs",
     "check:core": "node packages/semantic-graph-core/tools/core-gate.mjs",
     "check:public": "node scripts/validate-public-boundary.mjs",
-    "verify": "npm run lint && npm run test && npm run check:core && npm run check:public && npm run build"
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run check:core && npm run check:public && npm run build"
   },
   "dependencies": {
     "next": "16.3.3",

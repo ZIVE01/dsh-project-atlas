@@ -1,4 +1,4 @@
-# WebMCP Challenge submission draft
+# WebMCP Challenge submission copy
 
 ## Project
 
@@ -9,47 +9,87 @@
 A shared, read-only semantic graph where people and AI agents investigate
 project architecture through exact WebMCP tools instead of screen scraping.
 
-## What it does
+## Why WebMCP is ideal for this use case
 
-Project Atlas turns a synthetic multi-language project into an evidence-aware
-architecture workspace. The human can explore the graph directly. An agent can
-use five structured WebMCP tools to inspect the project, focus exact entities,
-trace bounded paths, list findings, and compare expected with observed layers.
+Architecture reasoning depends on exact identities and relationships. A route,
+capability, handler, datastore, audit contract, and observed runtime signal may
+look similar on screen while having very different trust levels. Pixel or DOM
+scraping makes an agent guess those meanings.
 
-The same UI reflects both human and agent actions. Unknown and blind-spot states
-remain visible, and unsupported requests fail closed.
+WebMCP gives Project Atlas a typed browser boundary. The agent receives stable
+entity IDs, closed input schemas, bounded results, provenance, and explicit
+unknown states. The human simultaneously sees the same selected node, path,
+finding, or comparison. This makes the browser a shared architecture workspace
+instead of a screenshot that the agent interprets separately.
 
-## How WebMCP is used
+## How it improves the user experience
 
-The browser registers five tools with literal
-`document.modelContext.registerTool()` calls. Inputs use closed JSON schemas and
-stable entity enumerations. Tool results are structured, minimized, and
-read-only. Three tools may update only shared UI focus or view mode; none can
-call a database, shell, filesystem, deployment target, or production service.
+The default Map view shows 19 nodes and 20 relations across experience,
+delivery, capability control, execution, owned data, audit, and observed
+evidence. Capability nodes reveal who may use a function and where it is
+enforced. A red BYPASS relation keeps a direct legacy UI-to-handler path
+visible. Needs-proof, unknown, blind-spot, and review states are never disguised
+as verified facts.
 
-## What was newly built for the challenge
+The Path view then reduces that map to one bounded, source-backed flow. A user
+can move from a system-wide overview to an exact explanation without manually
+searching files or losing the surrounding security context.
 
-- The Project Atlas responsive interface.
-- Five WebMCP browser tools and shared human/agent state.
-- Read-only and fail-closed contract checks.
-- Public documentation, privacy boundary, social image, and deployment package.
-- Integration of the existing portable semantic graph core into a public demo.
+## What people and agents can do together
 
-The portable semantic graph core predates the challenge and is identified as
-such in the README and Git history.
+A person can explore the graph, select a capability, inspect provenance, and
+run a guided replay. An agent can use five read-only WebMCP tools to inspect the
+project, focus an exact entity, trace a bounded path, list findings, and compare
+expected with observed architecture. Agent actions are reflected in the same
+visible workspace, so a person can verify the result immediately.
 
-## Links to complete before submission
+Previously this required separate code searches, architecture diagrams, audit
+notes, and chat explanations that could drift apart. Project Atlas gives both
+participants one evidence-aware view while preserving uncertainty and rejecting
+unknown or fuzzy entity requests without changing the current selection.
 
-- Live demo: `https://dsh-project-atlas.dr-satim.chatgpt.site`
-- Public source repository: `TBD`
-- Video under three minutes: `TBD`
-- Challenge submission page: `TBD`
+## How WebMCP was implemented
+
+The client registers exactly five tools through a literal
+`document.modelContext.registerTool()` boundary:
+
+- `inspect_project_overview`;
+- `focus_graph_entity`;
+- `trace_architecture_path`;
+- `list_security_findings`; and
+- `compare_architecture_layers`.
+
+Inputs use closed JSON schemas and exact entity enumerations. Results are typed,
+bounded, minimized, and read-only. Tools may update only shared UI focus,
+Map/Path presentation, or review view. They cannot call a database, shell,
+filesystem, deployment target, credential store, or production service.
+
+The application uses a fully synthetic Orchid Commerce overlay. The portable
+semantic graph core is dependency-free and generates a separate hash-verified
+multi-language fixture. The core predates the challenge; the multi-domain
+Atlas interface, five WebMCP tools, shared state, safety contracts, and public
+demo were built as the challenge extension.
+
+## Public links
+
+- Live demo: <https://dsh-project-atlas.dr-satim.chatgpt.site>
+- Public source repository: <https://github.com/ZIVE01/dsh-project-atlas>
+- Apache-2.0 license: <https://github.com/ZIVE01/dsh-project-atlas/blob/main/LICENSE>
+- Public YouTube demo under three minutes: **USER FINAL STEP — add URL after upload**
+- Challenge submission page or confirmation: **USER FINAL STEP — add URL or confirmation after submission**
 
 ## Final submission checklist
 
-- Verify entrant and regional eligibility directly against the official rules.
-- Confirm the public repository uses Apache-2.0 and contains no private data.
-- Record the video from the exact public build.
-- Test all five tools in a WebMCP-capable environment.
-- Replace every `TBD` with a public URL.
-- Submit before the official deadline shown by the organizer.
+- [ ] Confirm entrant and regional eligibility against the official rules.
+- [ ] Confirm the public repository is reachable and GitHub recognizes the
+      root Apache-2.0 license.
+- [ ] Test all five tools against the final public build in the ChatGPT
+      built-in browser.
+- [ ] Optionally test Chrome 149+ with
+      `chrome://flags/#enable-webmcp-testing` enabled.
+- [ ] Record the narrated demo from the exact final public build using
+      [`DEMO-SCRIPT.md`](DEMO-SCRIPT.md).
+- [ ] Upload the video publicly to YouTube and replace the user-step marker.
+- [ ] Submit the live URL, repository URL, description, and video before the
+      organizer's deadline.
+- [ ] Record the final submission confirmation.

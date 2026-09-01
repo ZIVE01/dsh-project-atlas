@@ -13,8 +13,8 @@ const expectedTools = [
 ];
 
 test('registers the exact public WebMCP tool set', () => {
-  assert.match(source, /document as Document & \{ modelContext\?: ModelContext \}/);
-  assert.match(source, /modelContext\.registerTool/);
+  assert.match(source, /interface Document\s*\{\s*modelContext: ModelContext;/s);
+  assert.match(source, /document\.modelContext\.registerTool/);
   for (const tool of expectedTools) assert.match(source, new RegExp(`name: '${tool}'`));
   assert.equal((source.match(/name: '[a-z_]+',/g) ?? []).length, expectedTools.length);
 });
@@ -45,10 +45,26 @@ test('guided demo exposes path, evidence comparison and fail-closed feedback', (
   assert.match(source, /LOCAL SAFETY REHEARSAL/);
 });
 
+test('capability map keeps domains, paths and bypasses explicit', () => {
+  assert.match(source, /type GraphPresentation = 'map' \| 'path'/);
+  assert.match(source, /const domainClusters = \[/);
+  assert.match(source, /id: 'capability:catalog-read'/);
+  assert.match(source, /id: 'capability:catalog-write'/);
+  assert.match(source, /id: 'screen:catalog-board'/);
+  assert.match(source, /state: 'bypass'/);
+  assert.match(source, /candidate\.state !== 'bypass'/);
+  assert.match(source, />\s*MAP\s*</);
+  assert.match(source, />\s*PATH\s*</);
+  assert.match(source, /MIN_GRAPH_SCALE = 0\.75/);
+  assert.match(source, /MAX_GRAPH_SCALE = 1\.4/);
+  assert.match(source, /Drag empty space to pan · wheel to zoom/);
+});
+
 test('desktop application shell fits the viewport without page scrolling', () => {
   assert.match(styles, /\.app-shell\s*\{[^}]*height:\s*100dvh;/s);
   assert.match(styles, /\.app-shell\s*\{[^}]*overflow:\s*hidden;/s);
   assert.match(styles, /\.workspace\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*0;/s);
-  assert.match(styles, /\.graph-panel\s*\{[^}]*grid-template-rows:\s*52px minmax\(0, 1fr\) 166px 34px;/s);
+  assert.match(styles, /\.graph-panel\s*\{[^}]*grid-template-rows:\s*48px minmax\(0, 1fr\) 144px 30px;/s);
+  assert.match(styles, /\.graph-world\s*\{[^}]*transform-origin:\s*50% 50%;/s);
   assert.doesNotMatch(styles, /\.workspace\s*\{[^}]*height:\s*690px;/s);
 });
