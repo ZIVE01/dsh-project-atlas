@@ -54,6 +54,13 @@ project, focus an exact entity, trace a bounded path, list findings, and compare
 expected with observed architecture. Agent actions are reflected in the same
 visible workspace, so a person can verify the result immediately.
 
+Atlas is deliberately not an IDE, deployment console, or production control
+plane. People and coding agents continue to edit and test the project in an
+approved development environment. A controlled DSH or integration pipeline can
+then regenerate the project's evidence, while Atlas shows the new graph and
+highlights deviations, bypasses, and unresolved unknowns. WebMCP provides the
+agent with exact architectural context, not authority to mutate the project.
+
 Previously this required separate code searches, architecture diagrams, audit
 notes, and chat explanations that could drift apart. Project Atlas gives both
 participants one evidence-aware view while preserving uncertainty and rejecting

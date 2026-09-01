@@ -76,6 +76,19 @@ real-project deployment therefore still needs a graph loader and a
 project-specific presentation adapter; pointing the public URL at a local
 folder is intentionally impossible.
 
+## Where development work happens
+
+Atlas remains a read-only Explorer after a real project is connected. Source
+code is edited and tested in an IDE, Codex, or another approved development
+environment. DSH or a controlled integration pipeline regenerates the graph
+after verified changes, and Atlas displays the updated state for people and
+agents.
+
+Atlas itself does not edit code, run SQL, grant permissions, execute builds,
+deploy releases, or issue production commands. Its role is to provide exact
+context, expose architectural drift, and preserve uncertainty without becoming
+a privileged mutation path.
+
 ## 6. Verify before use
 
 Before treating the graph as an architectural control surface, verify:

@@ -34,6 +34,20 @@ dynamic, or unproven relationships remain visible as unknown or review-only.
 See [Connecting a real project](docs/CONNECTING-A-REAL-PROJECT.md) for the
 current manifest format, CLI command, adapter boundary, and integration steps.
 
+## Atlas is an explorer, not an execution environment
+
+Atlas is the read-only visual and agent-facing view of a project. Developers
+and coding agents still edit and test source code in their IDE, Codex, or other
+approved development environment. DSH or another controlled pipeline rebuilds
+the architectural evidence after a change, and Atlas presents the resulting
+graph, deviations, bypasses, and unknowns.
+
+Atlas does not edit source files, run SQL, grant permissions, start builds,
+deploy releases, or control production. Its WebMCP tools help an agent identify
+the exact context and explain impact, but they provide insight without
+authority. This separation prevents an incorrect graph or agent conclusion
+from becoming a direct mutation path into the project.
+
 ## What the Atlas shows
 
 The main **Map** view is an Obsidian-like capability map with 19 visible nodes
