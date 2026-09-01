@@ -75,6 +75,13 @@ Recorded on 2026-09-01 against Sites version 7, source commit
 `8a3954497e84de0b9c98b9846c87c17a5e888894`, at
 <https://dsh-project-atlas.dr-satim.chatgpt.site>:
 
+The public GitHub mirror normalizes the author and committer email to the
+account's GitHub `noreply` address before first publication. Commit identifiers
+therefore differ from the private Sites source history, while file identity is
+preserved: Sites commit `8a395449...` and public commit `f9260ccf...` both point
+to tree `8fc6ab385faa1c82642cc01f8b75f841f495e2ad`. No application source,
+dependency, build output or verification result changed during normalization.
+
 - [x] Public deployment succeeded and the live route loaded normally.
 - [x] ChatGPT built-in browser reported **WebMCP connected**.
 - [x] Exactly five expected tools were discovered.
