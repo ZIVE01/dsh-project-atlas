@@ -117,12 +117,14 @@ experimental. The built-in ChatGPT browser is the primary challenge test path.
 
 ## Guided visual replay
 
-Use **RUN FULL DEMO** in the always-visible Agent Console to replay the same
-read-only operations at presentation speed. The replay moves between Map and
-Path, highlights the complete bounded route, exposes the red BYPASS, preserves
-uncertainty, and rejects an unknown entity without changing the current
-selection. On desktop, the complete workspace fits the viewport; only internal
-panels may scroll when the available space is unusually small.
+Use **RUN 2:45 GUIDED DEMO** in the always-visible Agent Console to replay the
+same read-only operations at presentation speed. The replay moves between Map
+and Path, highlights the complete bounded route, exposes the red BYPASS,
+preserves uncertainty, and rejects an unknown entity without changing the
+current selection. The synchronized **WHAT THIS PROVES** card translates each
+structured result into a short explanation for the human reviewer. On desktop,
+the complete workspace fits the viewport; only internal panels may scroll when
+the available space is unusually small.
 
 ## Architecture
 
