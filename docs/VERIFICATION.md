@@ -71,13 +71,18 @@ isolated temporary filesystem.
 
 ## Required post-deployment browser verification
 
-Recorded on 2026-09-01 against Sites version 4, source commit
-`b098ea48b5374f9a0f8c5244cb1b86674dea0662`, at
+Recorded on 2026-09-01 against Sites version 6, source commit
+`d6d8556039f02beb48e0d2d75791d695a34e7d97`, at
 <https://dsh-project-atlas.dr-satim.chatgpt.site>:
 
 - [x] Public deployment succeeded and the live route loaded normally.
 - [x] ChatGPT built-in browser reported **WebMCP connected**.
 - [x] Exactly five expected tools were discovered.
+- [x] The public UI exposed the deterministic 2:45 guided rehearsal with 12
+      timed stages, progress, automatic event following, and a jury summary.
+- [x] The exact deployed commit completed the full 2:45 rehearsal locally at
+      real speed: 12/12 stages, 5/5 tool handlers, one exposed bypass, three
+      preserved uncertainty states, zero mutations, and a fail-closed denial.
 - [x] Project overview returned the pinned synthetic identity.
 - [x] Exact focus changed the visible node and inspector together.
 - [x] Trace switched to Path and returned the six-node bounded
@@ -87,8 +92,9 @@ Recorded on 2026-09-01 against Sites version 4, source commit
 - [x] Unknown `handler:payment` was denied without changing the selected
       `Catalog update` node.
 - [x] Map restored all 19 nodes and 20 relations with zero dimmed nodes.
-- [x] At 1870 × 939 the document matched the viewport exactly; effective
-      1366 × 768 and 1440 × 900 local checks also had no document-level scroll.
+- [x] The public build matched its 1816 × 1135 browser viewport exactly;
+      effective 1366 × 768 and 1440 × 900 local checks also had no
+      document-level scroll.
 - [x] Browser warning/error console was empty after the tool sequence.
 
 Chrome 149+ can be checked separately with
