@@ -51,7 +51,11 @@ test('capability map keeps domains, paths and bypasses explicit', () => {
   assert.match(source, /id: 'capability:catalog-read'/);
   assert.match(source, /id: 'capability:catalog-write'/);
   assert.match(source, /id: 'screen:catalog-board'/);
-  assert.match(source, /state: 'bypass'/);
+  assert.match(
+    source,
+    /from: 'screen:catalog-admin',\s+to: 'handler:catalog-update',\s+label: 'BYPASS',\s+state: 'bypass',\s+route: 'upper-review-lane'/,
+  );
+  assert.match(source, /edge\.route === 'upper-review-lane'/);
   assert.match(source, /candidate\.state !== 'bypass'/);
   assert.match(source, />\s*MAP\s*</);
   assert.match(source, />\s*PATH\s*</);

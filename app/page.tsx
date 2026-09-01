@@ -46,6 +46,7 @@ type GraphEdge = {
   label: string;
   state: EdgeState;
   bend?: number;
+  route?: 'upper-review-lane';
 };
 
 type Finding = {
@@ -389,7 +390,13 @@ const edges: GraphEdge[] = [
   { from: 'capability:audit-read', to: 'handler:audit-query', label: 'guards', state: 'verified' },
   { from: 'handler:audit-query', to: 'store:audit-log', label: 'reads', state: 'verified' },
   { from: 'store:audit-log', to: 'telemetry:window', label: 'projects', state: 'verified' },
-  { from: 'screen:catalog-admin', to: 'handler:catalog-update', label: 'BYPASS', state: 'bypass', bend: 28 },
+  {
+    from: 'screen:catalog-admin',
+    to: 'handler:catalog-update',
+    label: 'BYPASS',
+    state: 'bypass',
+    route: 'upper-review-lane',
+  },
 ];
 
 const findings: Finding[] = [
@@ -494,6 +501,13 @@ function graphPosition(node: GraphNode, presentation: GraphPresentation, pathEnt
 }
 
 function graphEdgePath(edge: GraphEdge, from: GraphPosition, to: GraphPosition) {
+  if (edge.route === 'upper-review-lane') {
+    const laneY = 42;
+    const exitSourceX = from.x + 7;
+    const enterLaneX = from.x + 10;
+    const leaveLaneX = to.x - 10;
+    return `M ${from.x} ${from.y} C ${from.x + 3} ${from.y}, ${from.x + 5} ${from.y}, ${exitSourceX} ${from.y} C ${exitSourceX + 1} ${from.y}, ${exitSourceX + 1} ${laneY}, ${enterLaneX} ${laneY} L ${leaveLaneX} ${laneY} C ${to.x - 4} ${laneY}, ${to.x - 4} ${to.y}, ${to.x} ${to.y}`;
+  }
   const vertical = Math.abs(to.x - from.x) < 6;
   if (vertical) {
     const offset = edge.bend ?? 7;
@@ -505,6 +519,9 @@ function graphEdgePath(edge: GraphEdge, from: GraphPosition, to: GraphPosition) 
 }
 
 function graphEdgeLabelPosition(edge: GraphEdge, from: GraphPosition, to: GraphPosition): GraphPosition {
+  if (edge.route === 'upper-review-lane') {
+    return { x: 43, y: 42 };
+  }
   return {
     x: (from.x + to.x) / 2,
     y: (from.y + to.y) / 2 + (edge.bend ?? 0) * 0.55,

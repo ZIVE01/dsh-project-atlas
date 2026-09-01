@@ -2,13 +2,15 @@
 
 ## Comparison target
 
-- Source visual truth: user-supplied `codex-clipboard-16e2bb25-19c1-4a02-9ffb-df30476d5cf1.png` from the previous public Atlas build (conversation attachment; not committed).
+- Shell source visual truth: user-supplied `codex-clipboard-16e2bb25-19c1-4a02-9ffb-df30476d5cf1.png` from the previous public Atlas build (conversation attachment; not committed).
+- BYPASS correction source: user-supplied `codex-clipboard-2b49a2b0-ca73-4f37-8554-83459ead178f.png` (629 × 219; conversation attachment, not committed), where the direct red relation visually passed through `Compare layers`.
 - Rendered implementation: [`docs/atlas-map-final.png`](docs/atlas-map-final.png).
+- Focused implementation evidence: [`docs/atlas-bypass-route.png`](docs/atlas-bypass-route.png).
 - Route and mode: root page, light theme, Architecture / Map.
 - Source pixels: 1870 × 939.
-- Implementation pixels: 1870 × 938.
+- Implementation pixels: 1483 × 744 for the full capture and 913 × 413 for the focused capture.
 - Implementation CSS viewport: 1870 × 938 at the browser's normalized capture density.
-- Density normalization: source and implementation were opened together at original resolution; the one-pixel height difference does not affect the application region.
+- Density normalization: the in-app browser captures at approximately 0.793 output pixels per CSS pixel. Geometry and overflow were therefore checked in CSS pixels, while visual comparisons used each image at its original saved resolution.
 - State note: the source selected `screen:project-search`; the implementation intentionally selects `handler:lookup` so the default demo immediately exposes a needs-proof boundary. Layout, theme, shell, and Architecture mode are otherwise directly comparable.
 
 ## Full-view comparison evidence
@@ -24,6 +26,7 @@ At effective 1366 × 768 and 1440 × 900 browser checks, document `scrollWidth/s
 - Colors and tokens: the original ink, paper, green, violet, amber, and red semantics are preserved. The new red BYPASS is additionally distinguished by line weight and a text label.
 - Image and asset quality: this interface has no photographic or illustrative target assets. The existing DSH mark and CSS-native data visualization remain sharp at both tested desktop sizes; no source imagery was replaced.
 - Copy and content: labels consistently describe synthetic capabilities, consumers, owners, data, audit, and evidence. `READ ONLY`, uncertainty, and synthetic-data boundaries remain explicit.
+- BYPASS routing: the semantic edge remains `screen:catalog-admin → handler:catalog-update`, but the stroke now uses a dedicated upper review lane. It does not visually or geometrically enter `Compare layers`, the approved route/API/capability cards, or any other unrelated node.
 
 ## Interaction and accessibility evidence
 
@@ -56,6 +59,26 @@ Fixes made:
 - Effective 1440 × 900: 19/19 nodes inside canvas; 20 relations; no document-level scroll.
 - Path → Map: six nodes → nineteen nodes; dimmed nodes after Map: zero.
 - Final same-size visual capture: [`docs/atlas-map-final.png`](docs/atlas-map-final.png).
+- No actionable P0, P1, or P2 issue remains.
+
+### Iteration 3 — BYPASS correction blocked
+
+- [P2] Replacing the original curve with a lower lane at `y=79` removed the semantic ambiguity in geometry, but full-view inspection still made the stroke appear to touch the top edge of `Compare layers`.
+- [P2] Raising that lane to `y=74` cleared `Compare layers`, but made the stroke tangent to `PATCH /catalog`.
+- [P2] The intermediate `y=76.5` corridor cleared both cards at 1870 × 938, but the available gap was too narrow at effective 1366 × 768 and intersected `PATCH /catalog`.
+
+Fix made:
+
+- replaced the narrow lower corridor with an explicit upper review lane that exits the source before the approved route, crosses empty space between the read and mutation rows, and approaches only the exact target handler.
+
+### Iteration 4 — final BYPASS evidence
+
+- The full and focused captures were opened together with the user-provided problem screenshot.
+- Effective 1870 × 938: zero unrelated node intersections, zero label intersections, and no document scroll.
+- Effective 1440 × 900: zero unrelated node intersections, zero label intersections, and no document scroll.
+- Effective 1366 × 768: zero unrelated node intersections, zero label intersections, and no document scroll.
+- `Compare layers` retains only its approved `WebMCP reviewer → Compare layers → audit.read` chain.
+- Fonts, spacing, colors, images/assets, copy, shell proportions, and all non-BYPASS relations are unchanged.
 - No actionable P0, P1, or P2 issue remains.
 
 ## Follow-up polish
