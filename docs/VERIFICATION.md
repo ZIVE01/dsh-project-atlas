@@ -71,20 +71,25 @@ isolated temporary filesystem.
 
 ## Required post-deployment browser verification
 
-Record this evidence after the multi-domain build is published to
+Recorded on 2026-09-01 against Sites version 4, source commit
+`b098ea48b5374f9a0f8c5244cb1b86674dea0662`, at
 <https://dsh-project-atlas.dr-satim.chatgpt.site>:
 
-- [ ] Public URL returns HTTP 200.
-- [ ] ChatGPT built-in browser reports **WebMCP connected**.
-- [ ] Exactly five expected tools are visible.
-- [ ] Project overview returns the pinned synthetic identity.
-- [ ] Exact focus changes the visible node and inspector together.
-- [ ] Trace switches to Path and returns the bounded search-to-catalog route.
-- [ ] High-severity findings expose the BYPASS.
-- [ ] Layer comparison preserves UNKNOWN, BLIND SPOT, and REVIEW.
-- [ ] Unknown `handler:payment` is rejected without changing selection.
-- [ ] Map returns to all 19 nodes and 20 relations.
-- [ ] The desktop page fits the viewport without document-level scrolling.
+- [x] Public deployment succeeded and the live route loaded normally.
+- [x] ChatGPT built-in browser reported **WebMCP connected**.
+- [x] Exactly five expected tools were discovered.
+- [x] Project overview returned the pinned synthetic identity.
+- [x] Exact focus changed the visible node and inspector together.
+- [x] Trace switched to Path and returned the six-node bounded
+      search-to-catalog route.
+- [x] Two high-severity findings included the explicit BYPASS.
+- [x] Layer comparison preserved UNKNOWN, BLIND SPOT, and REVIEW.
+- [x] Unknown `handler:payment` was denied without changing the selected
+      `Catalog update` node.
+- [x] Map restored all 19 nodes and 20 relations with zero dimmed nodes.
+- [x] At 1870 × 939 the document matched the viewport exactly; effective
+      1366 × 768 and 1440 × 900 local checks also had no document-level scroll.
+- [x] Browser warning/error console was empty after the tool sequence.
 
 Chrome 149+ can be checked separately with
 `chrome://flags/#enable-webmcp-testing` enabled. Because browser support is
