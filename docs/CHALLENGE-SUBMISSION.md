@@ -9,6 +9,17 @@
 A shared, read-only semantic graph where people and AI agents investigate
 project architecture through exact WebMCP tools instead of screen scraping.
 
+The public experience uses the synthetic Orchid Commerce project so judges can
+inspect the complete workflow without receiving private source code or data.
+The underlying project-neutral core is designed for real codebases: it can
+analyze an explicit allowlisted manifest across JavaScript/React, Python, C#,
+SQL, and common service configuration, then preserve deterministic identities,
+source provenance, and uncertainty. A deployment-specific adapter can add that
+project's routes, capability contracts, ownership, policies, and separately
+collected runtime evidence before Atlas exposes the resulting graph in an
+isolated namespace. Unsupported or unproven relations remain unknown instead
+of being silently invented.
+
 ## Why WebMCP is ideal for this use case
 
 Architecture reasoning depends on exact identities and relationships. A route,

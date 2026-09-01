@@ -15,6 +15,25 @@ without giving the agent database, shell, deployment, or mutation access.
 The demo uses a fully synthetic project named **Orchid Commerce**. No customer,
 employee, production, or private-project data is included.
 
+## From the synthetic demo to real projects
+
+Orchid Commerce is the safe public demonstration dataset, not a limitation of
+the engine. The project-neutral core can analyze an explicit, allowlisted
+manifest from a real codebase, including JavaScript/React, Python, C#, SQL, and
+common service configuration. It produces deterministic entities and
+relations, source provenance, validation results, and explicit unknowns.
+
+For a real deployment, a project-specific adapter enriches that structural
+graph with the project's routes, capability IDs, ownership rules, policy
+contracts, and separately collected runtime evidence. Atlas can then load the
+generated graph under an isolated project namespace and expose the same
+read-only WebMCP investigation workflow. The public challenge build does not
+claim automatic complete understanding of every codebase: unsupported,
+dynamic, or unproven relationships remain visible as unknown or review-only.
+
+See [Connecting a real project](docs/CONNECTING-A-REAL-PROJECT.md) for the
+current manifest format, CLI command, adapter boundary, and integration steps.
+
 ## What the Atlas shows
 
 The main **Map** view is an Obsidian-like capability map with 19 visible nodes
